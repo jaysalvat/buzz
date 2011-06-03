@@ -11,10 +11,10 @@ var boom = function( src, volume ) {
         this.sound.pause();
     }
     this.pause = function() {
-        this.sound.pause();        
+        this.sound.pause();
     }
-    this.jump = function( to ) {
-        this.setTime( to );   
+    this.jump = function( time ) {
+        this.setTime( time );
     }
     this.toggle = function( ) {
         if ( this.sound.paused ) {
@@ -25,7 +25,7 @@ var boom = function( src, volume ) {
     }
     this.setVolume = function( volume ) {
         if ( volume > 100 ) {
-            volume =  100;
+            volume = 100;
         } 
         if ( volume < 0 ) {
             volume = 0;
@@ -36,14 +36,20 @@ var boom = function( src, volume ) {
     this.getVolume = function() {
         return this.volume;
     }
+    this.increaseVolume = function( value ) {
+        this.setVolume( this.volume + ( value || 1 ) );
+    }
+    this.decreaseVolume = function( value ) {
+        this.setVolume( this.volume - ( value || 1 ) );
+    }
     this.setTime = function( time ) {
         this.sound.currentTime = time;
     }
     this.getTime = function() {
-        return Math.round( this.sound.currentTime * 100) / 100;
+        return Math.round( this.sound.currentTime * 100 ) / 100;
     }
     this.getDuration = function() {
-        return Math.round( this.sound.duration * 100) / 100;
+        return Math.round( this.sound.duration * 100 ) / 100;
     }
     this.setPercent = function( time ) {
         this.sound.currentTime = this.sound.duration * time / 100;
