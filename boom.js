@@ -1,8 +1,18 @@
 var boom = {
-    sound: function( src, volume ) {
-        this.volume = volume || 100;
+    defaults: {
+      loop: true,
+      preload: 'metadata'  
+    },
+    sound: function( src, settings ) {
+        var settings = settings || {};
+        var options = {
+            preload: settings.preload || boom.defaults.preload,
+            loop: settings.loop || boom.defaults.loop     
+        }
         this.sound = document.createElement('audio');
         this.sound.setAttribute('src', src);
+        this.sound.setAttribute('preload', options.preload);
+        this.sound.setAttribute('loop', options.loop);
 
         this.play = function() {
             this.sound.play();
