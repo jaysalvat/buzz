@@ -9,10 +9,10 @@ var boom = {
             preload: settings.preload || boom.defaults.preload,
             loop: settings.loop || boom.defaults.loop     
         }
-        this.sound = document.createElement('audio');
-        this.sound.setAttribute('src', src);
-        this.sound.setAttribute('preload', options.preload);
-        this.sound.setAttribute('loop', options.loop);
+        this.sound = document.createElement( 'audio' );
+        this.sound.setAttribute( 'src', src );
+        this.sound.setAttribute( 'preload', options.preload );
+        this.sound.setAttribute( 'loop', options.loop );
 
         this.play = function() {
             this.sound.play();
@@ -78,7 +78,14 @@ var boom = {
         this.getPercent = function() {
             return Math.round( (this.sound.currentTime / this.sound.duration * 100 ) * 100) / 100;
         }
-        this.get = function() {
+        this.set = function( key, value ) {
+            this.sound.setAttribute( key, value );
+            return this;
+        }
+        this.get = function( key ) {
+            if ( key ) {
+                return this.sound.getAttribute( key );
+            }
             return this.sound;
         }
         this.bind = function( evt, func ) {
