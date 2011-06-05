@@ -1,27 +1,34 @@
 var boom = {
     defaults: {
-      loop: true,
-      preload: 'metadata',
-      volume: 100
+        preload: 'metadata', // auto, metadata, none
+        autoplay: false, // true, false
+        loop: false, // true, false
+        volume: 100
     },
     sounds: [],
     sound: function( src, settings ) {
         var settings = settings || {},
-            options = {
-                preload: settings.preload || boom.defaults.preload,
-                loop: settings.loop || boom.defaults.loop,
-                volume: settings.volume || boom.defaults.volume  
-            },
+            options = {},
             events = [];
+        
+        for( var i in boom.defaults ) {
+            options[ i ] = settings[ i ] || boom.defaults[ i ];
+        }
+        
         this.sound = document.createElement( 'audio' );
         this.sound.setAttribute( 'src', src );
         this.sound.setAttribute( 'preload', options.preload );
-        this.sound.setAttribute( 'loop', options.loop );
+        this.volume = options.volume;
+        
+        if ( options.loop ) {
+            this.sound.setAttribute( 'loop', true );
+        }
+        if ( options.autoplay ) {
+            this.sound.setAttribute( 'autoplay', true );            
+        }
 
         boom.sounds.push( this );
-
-        this.volume = options.volume;
-
+        
         this.play = function() {
             this.sound.play();
             return this;
