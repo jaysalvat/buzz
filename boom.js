@@ -119,6 +119,14 @@ var boom = {
 			}
             return this;
         }
+        this.destroy = function() {
+            for( var i in boom.sounds ) {
+                if ( boom.sounds[ i ] == this ) {
+                    delete boom.sounds[ i ];
+                    break;
+                }
+            }
+        }
     },
     all: function() {
       return new boom.group( boom.sounds );  
