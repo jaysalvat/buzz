@@ -116,5 +116,47 @@ var boom = {
 			}
             return this;
         }
+    },
+    group: function( sounds ) {
+        method = function() {
+            var args = Array.prototype.slice.call( arguments ),
+                func = args.shift();
+            for( var i in sounds ) {
+                sounds[ i ][ func ]( args );
+            }
+        }
+        this.play = function() {
+            method( 'play' );
+        }
+        this.stop = function() {
+            method( 'stop' );
+        }
+        this.jump = function( time ) {
+            method( 'jump', time );
+        }
+        this.toggle = function( ) {
+            method( 'toggle' );
+        }
+        this.setVolume = function( volume ) {
+            method( 'setVolume', volume );
+        },
+        this.increaseVolume = function( value ) {
+            method( 'increaseVolume', value );
+        }
+        this.decreaseVolume = function( value ) {
+            method( 'decreaseVolume', value );
+        }
+        this.setTime = function( time ) {
+            method( 'setTime', time );
+        }
+        this.set = function( key, value ) {
+            method( 'set', key, value );
+        }
+        this.bind = function( type, func ) {
+            method( 'bind', type, func );
+        }
+        this.unbind = function( type ) {
+            method( 'unbind', type );
+        }
     }
 }
