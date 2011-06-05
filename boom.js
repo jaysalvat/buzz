@@ -1,18 +1,23 @@
 var boom = {
     defaults: {
       loop: true,
-      preload: 'metadata'  
+      preload: 'metadata',
+      volume: 100
     },
     sound: function( src, settings ) {
-        var settings = settings || {};
-        var options = {
-            preload: settings.preload || boom.defaults.preload,
-            loop: settings.loop || boom.defaults.loop     
-        }
+        var settings = settings || {},
+            options = {
+                preload: settings.preload || boom.defaults.preload,
+                loop: settings.loop || boom.defaults.loop,
+                volume: settings.volume || boom.defaults.volume  
+            },
+            events = [];
         this.sound = document.createElement( 'audio' );
         this.sound.setAttribute( 'src', src );
         this.sound.setAttribute( 'preload', options.preload );
         this.sound.setAttribute( 'loop', options.loop );
+
+        this.volume = options.volume;
 
         this.play = function() {
             this.sound.play();
@@ -88,8 +93,27 @@ var boom = {
             }
             return this.sound;
         }
-        this.bind = function( evt, func ) {
-            this.sound.addEventListener( evt, func, true ); 
+        this.bind = function( type, func ) {
+            var idx = type;
+            if ( type.indexOf( '.' ) > -1 ) {
+				type = type.split( '.' )[1];
+			}
+			events.push( { idx: idx, func: func } );
+            this.sound.addEventListener( type, func ); 
+            return this;
+        }
+        this.unbind = function( type ) {
+            var idx = type;
+            if ( type.indexOf( '.' ) > -1 ) {
+                type = type.split( '.' )[1];
+			}
+			for( var i in events ) {
+			    var c = events[ i ].idx.match( /\.(.*)/ );
+			 	if ( events[ i ].idx == idx || ( c && c[1] == idx.replace('.', '') ) ) {
+                    this.sound.removeEventListener( type, events[ i ].func );
+                    delete events[ i ];
+			    }   
+			}
             return this;
         }
     }
