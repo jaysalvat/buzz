@@ -4,6 +4,7 @@ var boom = {
       preload: 'metadata',
       volume: 100
     },
+    sounds: [],
     sound: function( src, settings ) {
         var settings = settings || {},
             options = {
@@ -16,6 +17,8 @@ var boom = {
         this.sound.setAttribute( 'src', src );
         this.sound.setAttribute( 'preload', options.preload );
         this.sound.setAttribute( 'loop', options.loop );
+
+        boom.sounds.push( this );
 
         this.volume = options.volume;
 
@@ -117,8 +120,11 @@ var boom = {
             return this;
         }
     },
+    all: function() {
+      return new boom.group( boom.sounds );  
+    },
     group: function( sounds ) {
-        method = function() {
+        fn = function() {
             var args = Array.prototype.slice.call( arguments ),
                 func = args.shift();
             for( var i in sounds ) {
@@ -126,37 +132,37 @@ var boom = {
             }
         }
         this.play = function() {
-            method( 'play' );
+            fn( 'play' );
         }
         this.stop = function() {
-            method( 'stop' );
+            fn( 'stop' );
         }
         this.jump = function( time ) {
-            method( 'jump', time );
+            fn( 'jump', time );
         }
         this.toggle = function( ) {
-            method( 'toggle' );
+            fn( 'toggle' );
         }
         this.setVolume = function( volume ) {
-            method( 'setVolume', volume );
+            fn( 'setVolume', volume );
         },
         this.increaseVolume = function( value ) {
-            method( 'increaseVolume', value );
+            fn( 'increaseVolume', value );
         }
         this.decreaseVolume = function( value ) {
-            method( 'decreaseVolume', value );
+            fn( 'decreaseVolume', value );
         }
         this.setTime = function( time ) {
-            method( 'setTime', time );
+            fn( 'setTime', time );
         }
         this.set = function( key, value ) {
-            method( 'set', key, value );
+            fn( 'set', key, value );
         }
         this.bind = function( type, func ) {
-            method( 'bind', type, func );
+            fn( 'bind', type, func );
         }
         this.unbind = function( type ) {
-            method( 'unbind', type );
+            fn( 'unbind', type );
         }
     }
 }
