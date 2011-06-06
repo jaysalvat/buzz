@@ -6,8 +6,21 @@ var boom = {
         volume: 100
     },
     sounds: [],
+    el: document.createElement( 'audio' ),
     isSupported: function() {
-        return  !!( document.createElement( 'audio' ).canPlayType );
+        return  !!( this.el.canPlayType );
+    },
+    isOGGSupported: function() {
+        return !!this.el.canPlayType && this.el.canPlayType( 'audio/ogg; codecs="vorbis"' );  
+    },
+    isWAVSupported: function() {
+        return !!this.el.canPlayType && this.el.canPlayType( 'audio/wav; codecs="1"' );  
+    },
+    isMP3Supported: function() {
+        return !!this.el.canPlayType && this.el.canPlayType( 'audio/mpeg;' );
+    },
+    isAACSupported: function() {
+        return !!this.el.canPlayType && ( this.el.canPlayType( 'audio/x-m4a;' ) || this.el.canPlayType( 'audio/aac;' ) );
     },
     sound: function( src, settings ) {
         var settings = settings || {},
@@ -182,6 +195,7 @@ var boom = {
         fn = function() {
             var args = Array.prototype.slice.call( arguments ),
                 func = args.shift();
+                
             for( var i in sounds ) {
                 sounds[ i ][ func ]( args );
             }
