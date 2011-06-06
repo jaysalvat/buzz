@@ -269,5 +269,17 @@ var boom = {
         this.unbind = function( type ) {
             fn( 'unbind', type );
         }
+    },
+    formatTime: function( seconds, displayHours ) {
+        hours = Math.floor( seconds / 3600 );
+        hours = ( hours >= 10 ) ? hours : "0" + hours;            
+        minutes = displayHours ? Math.floor( seconds / 60 % 60 ) : Math.floor( seconds / 60 );
+        minutes = ( minutes >= 10 ) ? minutes : "0" + minutes;
+        seconds = Math.floor( seconds % 60 );
+        seconds = ( seconds >= 10 ) ? seconds : "0" + seconds;
+        if ( displayHours ) {
+            return hours + ":" + minutes + ":" + seconds;
+        }
+        return minutes + ":" + seconds;
     }
 }
