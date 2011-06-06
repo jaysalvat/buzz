@@ -79,7 +79,12 @@ var boom = {
 
             boom.sounds.push( this );
         }
-                
+        this.load = function() {
+            if ( !ok ) return this;
+            
+            this.sound.load();
+            return this;
+        }                
         this.play = function() {
             if ( !ok ) return this;
             
