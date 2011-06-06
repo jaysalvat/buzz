@@ -62,19 +62,21 @@ var boom = {
         
             this.sound = document.createElement( 'audio' );
             if ( src instanceof Array) {
+                var source = document.createElement('source');
                 for( var i in src ) {
-                    this.sound.setAttribute( 'src', src[ i ] );
+                    source.src = src[ i ];
+                    this.sound.appendChild( source );
                 }
             } else {
-                this.sound.setAttribute( 'src', src );                
+                this.sound.src = src;                
             }
             if ( options.loop ) {
-                this.sound.setAttribute( 'loop', true );
+                this.sound.loop = true;
             }
             if ( options.autoplay ) {
-                this.sound.setAttribute( 'autoplay', true );            
+                this.sound.autoplay = true;            
             }
-            this.sound.setAttribute( 'preload', options.preload );
+            this.sound.preload = options.preload;
             this.volume = options.volume;
 
             boom.sounds.push( this );
@@ -181,14 +183,14 @@ var boom = {
         this.set = function( key, value ) {
             if ( !ok ) return this;
              
-            this.sound.setAttribute( key, value );
+            this.sound[ key ] = value;
             return this;
         }
         this.get = function( key ) {
             if ( !ok ) return null;
             
             if ( key ) {
-                return this.sound.getAttribute( key );
+                return this.sound[ key ];
             }
             return this.sound;
         }
@@ -200,7 +202,7 @@ var boom = {
 				type = type.split( '.' )[1];
 			}
 			events.push( { idx: idx, func: func } );
-            this.sound.addEventListener( type, func ); 
+            this.sound.addEventListener( type, func, true ); 
             return this;
         }
         this.unbind = function( type ) {
