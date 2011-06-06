@@ -146,13 +146,20 @@ var boom = {
         }
         this.setTime = function( time ) {
             if ( !ok ) return this;
-            
+
+            var splits = time.split( ':' );
+            if ( splits.length == 3 ) {
+                time = ( parseInt( splits[0] ) * 3600 ) + ( parseInt(splits[1] ) * 60 ) + parseInt( splits[2] ); 
+            } 
+            if ( splits.length == 2 ) {
+                time = ( parseInt( splits[0] ) * 60 ) + parseInt( splits[1] );
+            }
             this.sound.currentTime = time;
             return this;
         }
         this.getTime = function() {
             if ( !ok ) return null;
-            
+
             return Math.round( this.sound.currentTime * 100 ) / 100;
         }
         this.getDuration = function() {
