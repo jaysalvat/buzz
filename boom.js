@@ -6,55 +6,74 @@ var boom = {
         volume: 100
     },
     sounds: [],
+    isSupported: function() {
+        return  !!( document.createElement( 'audio' ).canPlayType );
+    },
     sound: function( src, settings ) {
         var settings = settings || {},
             options = {},
-            events = [];
+            events = [],
+            ok = boom.isSupported();
         
-        for( var i in boom.defaults ) {
-            options[ i ] = settings[ i ] || boom.defaults[ i ];
-        }
+        if ( ok ) {
+            for( var i in boom.defaults ) {
+                options[ i ] = settings[ i ] || boom.defaults[ i ];
+            }
         
-        this.sound = document.createElement( 'audio' );
-        this.sound.setAttribute( 'src', src );
-        this.sound.setAttribute( 'preload', options.preload );
-        this.volume = options.volume;
+            this.sound = document.createElement( 'audio' );
+            this.sound.setAttribute( 'src', src );
+            this.sound.setAttribute( 'preload', options.preload );
+            this.volume = options.volume;
         
-        if ( options.loop ) {
-            this.sound.setAttribute( 'loop', true );
-        }
-        if ( options.autoplay ) {
-            this.sound.setAttribute( 'autoplay', true );            
-        }
+            if ( options.loop ) {
+                this.sound.setAttribute( 'loop', true );
+            }
+        
+            if ( options.autoplay ) {
+                this.sound.setAttribute( 'autoplay', true );            
+            }
 
-        boom.sounds.push( this );
-        
+            boom.sounds.push( this );
+        }
+                
         this.play = function() {
+            if ( !ok ) return this;
+            
             this.sound.play();
             return this;
         }
         this.stop = function() {
+            if ( !ok ) return this;
+            
             this.sound.currentTime = 0;
             this.sound.pause();
             return this;
         }
         this.pause = function() {
+            if ( !ok ) return this;
+            
             this.sound.pause();
             return this;
         }
         this.jump = function( time ) {
+            if ( !ok ) return this;
+            
             this.setTime( time );
             return this;
         }
-        this.toggle = function( ) {
+        this.toggle = function() {
+            if ( !ok ) return this;
+            
             if ( this.sound.paused ) {
-                this.sound.play();
+                this.sound.plday();
             } else {
                 this.sound.pause();
             }
             return this;
         }
         this.setVolume = function( volume ) {
+            if ( !ok ) return this;
+            
             if ( volume > 100 ) {
                 volume = 100;
             } 
@@ -77,33 +96,49 @@ var boom = {
             return this;
         }
         this.setTime = function( time ) {
+            if ( !ok ) return this;
+            
             this.sound.currentTime = time;
             return this;
         }
         this.getTime = function() {
+            if ( !ok ) return null;
+            
             return Math.round( this.sound.currentTime * 100 ) / 100;
         }
         this.getDuration = function() {
+            if ( !ok ) return null;
+            
             return Math.round( this.sound.duration * 100 ) / 100;
         }
         this.setPercent = function( time ) {
+            if ( !ok ) return this;
+            
             this.sound.currentTime = this.sound.duration * time / 100;
             return this;
         }
         this.getPercent = function() {
+            if ( !ok ) return null;
+            
             return Math.round( (this.sound.currentTime / this.sound.duration * 100 ) * 100) / 100;
         }
         this.set = function( key, value ) {
+            if ( !ok ) return this;
+             
             this.sound.setAttribute( key, value );
             return this;
         }
         this.get = function( key ) {
+            if ( !ok ) return null;
+            
             if ( key ) {
                 return this.sound.getAttribute( key );
             }
             return this.sound;
         }
         this.bind = function( type, func ) {
+            if ( !ok ) return this;
+            
             var idx = type;
             if ( type.indexOf( '.' ) > -1 ) {
 				type = type.split( '.' )[1];
@@ -113,6 +148,8 @@ var boom = {
             return this;
         }
         this.unbind = function( type ) {
+            if ( !ok ) return this;
+            
             var idx = type;
             if ( type.indexOf( '.' ) > -1 ) {
                 type = type.split( '.' )[1];
@@ -127,12 +164,15 @@ var boom = {
             return this;
         }
         this.destroy = function() {
+            if ( !ok ) return this;
+            
             for( var i in boom.sounds ) {
                 if ( boom.sounds[ i ] == this ) {
                     delete boom.sounds[ i ];
                     break;
                 }
             }
+            return this;
         }
     },
     all: function() {
