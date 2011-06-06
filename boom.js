@@ -1,3 +1,30 @@
+// ----------------------------------------------------------------------------
+// Boom - A tiny audio library 
+// v 1.0 beta
+// Dual licensed under the MIT and GPL licenses.
+// http://vegas.jaysalvat.com/
+// ----------------------------------------------------------------------------
+// Copyright (C) 2011 Jay Salvat
+// http://jaysalvat.com/
+// ----------------------------------------------------------------------------
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files ( the "Software" ), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+// ----------------------------------------------------------------------------
 var boom = {
     defaults: {
         preload: 'metadata', // auto, metadata, none
@@ -34,17 +61,21 @@ var boom = {
             }
         
             this.sound = document.createElement( 'audio' );
-            this.sound.setAttribute( 'src', src );
-            this.sound.setAttribute( 'preload', options.preload );
-            this.volume = options.volume;
-        
+            if ( src instanceof Array) {
+                for( var i in src ) {
+                    this.sound.setAttribute( 'src', src[ i ] );
+                }
+            } else {
+                this.sound.setAttribute( 'src', src );                
+            }
             if ( options.loop ) {
                 this.sound.setAttribute( 'loop', true );
             }
-        
             if ( options.autoplay ) {
                 this.sound.setAttribute( 'autoplay', true );            
             }
+            this.sound.setAttribute( 'preload', options.preload );
+            this.volume = options.volume;
 
             boom.sounds.push( this );
         }
@@ -78,7 +109,7 @@ var boom = {
             if ( !ok ) return this;
             
             if ( this.sound.paused ) {
-                this.sound.plday();
+                this.sound.play();
             } else {
                 this.sound.pause();
             }
