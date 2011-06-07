@@ -62,8 +62,8 @@ var boom = {
         
             this.sound = document.createElement( 'audio' );
             if ( src instanceof Array) {
-                var source = document.createElement('source');
                 for( var i in src ) {
+                    var source = document.createElement( 'source' );
                     source.src = src[ i ];
                     this.sound.appendChild( source );
                 }
