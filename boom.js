@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // Boom - A tiny audio library 
-// v 1.0 beta
+// v 1.0 alpha
 // Dual licensed under the MIT and GPL licenses.
-// http://vegas.jaysalvat.com/
+// http://boom.jaysalvat.com/
 // ----------------------------------------------------------------------------
 // Copyright (C) 2011 Jay Salvat
 // http://jaysalvat.com/
@@ -28,9 +28,10 @@
 var boom = {
     defaults: {
         preload: 'metadata', // auto, metadata, none
-        autoplay: false, // true, false
-        loop: false, // true, false
-        volume: 100
+        autoplay: false, // bool
+        loop: false, // bool
+        volume: 100,
+        placeholder: '--'
     },
     sounds: [],
     el: document.createElement( 'audio' ),
@@ -38,10 +39,10 @@ var boom = {
         return  !!( this.el.canPlayType );
     },
     isOGGSupported: function() {
-        return !!this.el.canPlayType && this.el.canPlayType( 'audio/ogg; codecs="vorbis"' );  
+        return !!this.el.canPlayType && this.el.canPlayType( 'audio/ogg; codecs="vorbis"' );
     },
     isWAVSupported: function() {
-        return !!this.el.canPlayType && this.el.canPlayType( 'audio/wav; codecs="1"' );  
+        return !!this.el.canPlayType && this.el.canPlayType( 'audio/wav; codecs="1"' );
     },
     isMP3Supported: function() {
         return !!this.el.canPlayType && this.el.canPlayType( 'audio/mpeg;' );
@@ -49,17 +50,16 @@ var boom = {
     isAACSupported: function() {
         return !!this.el.canPlayType && ( this.el.canPlayType( 'audio/x-m4a;' ) || this.el.canPlayType( 'audio/aac;' ) );
     },
-    sound: function( src, settings ) {
-        var settings = settings || {},
-            options = {},
+    sound: function( src, options ) {
+        var options = options || {},
             events = [],
             supported = boom.isSupported();
-        
+            
         if ( supported ) {
             for( var i in boom.defaults ) {
-                options[ i ] = settings[ i ] || boom.defaults[ i ];
+                options[ i ] = options[ i ] || boom.defaults[ i ];
             }
-        
+
             this.sound = document.createElement( 'audio' );
             if ( src instanceof Array) {
                 for( var i in src ) {
@@ -68,13 +68,13 @@ var boom = {
                     this.sound.appendChild( source );
                 }
             } else {
-                this.sound.src = src;                
+                this.sound.src = src;
             }
             if ( options.loop ) {
-                this.sound.loop = true;
+                this.sound.loop = 'loop';
             }
             if ( options.autoplay ) {
-                this.sound.autoplay = true;            
+                this.sound.autoplay = 'autoplay';
             }
             this.sound.preload = options.preload;
             this.volume = options.volume;
@@ -83,38 +83,37 @@ var boom = {
         }
         this.load = function() {
             if ( !supported ) return this;
-            
+
             this.sound.load();
             return this;
-        }                
+        }
         this.play = function() {
             if ( !supported ) return this;
-            
+
             this.sound.play();
             return this;
         }
         this.stop = function() {
-            if ( !supported ) return this;
-            this.sound.currentTime = 0;
-                     
-            this.sound.pause();
+            if ( !supported  ) return this;
             
+            this.setTime(0);
+            this.sound.pause();
             return this;
         }
         this.isEnded = function() {
             if ( !supported ) return null;
-            
+
             return this.sound.ended;
         }
         this.pause = function() {
             if ( !supported ) return this;
-            
+
             this.sound.pause();
             return this;
         }
         this.isPaused = function() {
             if ( !supported ) return null;
-            
+
             return this.sound.paused;
         }
         this.mute = function() {
@@ -125,24 +124,14 @@ var boom = {
         }
         this.toggleMute = function() {
             if ( !supported ) return this;
-            
-            if ( this.sound.muted ) {
-                this.sound.muted = false;
-            } else {
-                this.sound.muted = true;                
-            }
+
+            this.sound.muted = !this.sound.muted;
             return this;
         }
         this.isMuted = function() {
             if ( !supported ) return null;
-            
+
             return this.sound.muted;
-        }
-        this.jump = function( time ) {
-            if ( !supported ) return this;
-            
-            this.setTime( time );
-            return this;
         }
         this.togglePlay = function() {
             if ( !supported ) return this;
@@ -156,104 +145,100 @@ var boom = {
         }
         this.setVolume = function( volume ) {
             if ( !supported ) return this;
-            
-            if ( volume > 100 ) {
-                volume = 100;
-            } 
-            if ( volume < 0 ) {
-                volume = 0;
-            }
+
+            if ( volume < 0 ) volume = 0;
+            if ( volume > 100 ) volume = 100;
             this.volume = volume;
             this.sound.volume = volume / 100;
             return this;
         },
         this.getVolume = function() {
+            if ( !supported ) return this;
+
             return this.volume;
         }
         this.increaseVolume = function( value ) {
-            this.setVolume( this.volume + ( value || 1 ) );
-            return this;
+            return this.setVolume( this.volume + ( value || 1 ) );
         }
         this.decreaseVolume = function( value ) {
-            this.setVolume( this.volume - ( value || 1 ) );
-            return this;
+            return this.setVolume( this.volume - ( value || 1 ) );
         }
         this.setTime = function( time ) {
             if ( !supported ) return this;
 
-            var splits = time.split( ':' );
-            if ( splits.length == 3 ) {
-                time = ( parseInt( splits[0] ) * 3600 ) + ( parseInt(splits[1] ) * 60 ) + parseInt( splits[2] ); 
-            } 
-            if ( splits.length == 2 ) {
-                time = ( parseInt( splits[0] ) * 60 ) + parseInt( splits[1] );
+            if ( time instanceof String) {
+                var splits = time.split( ':' );
+                if ( splits && splits.length == 3 ) {
+                    time = ( parseInt( splits[0] ) * 3600 ) + ( parseInt(splits[1] ) * 60 ) + parseInt( splits[2] );
+                } 
+                if ( splits && splits.length == 2 ) {
+                    time = ( parseInt( splits[0] ) * 60 ) + parseInt( splits[1] );
+                }
             }
-            this.sound.currentTime = time;
+            try {
+                this.sound.currentTime = time;
+            } catch(e) {}
             return this;
         }
         this.getTime = function() {
             if ( !supported ) return null;
 
             var time = Math.round( this.sound.currentTime * 100 ) / 100;
-            return isNaN( time ) ? '--' : time;
+            return !time ? boom.defaults.placeholder : time;
         }
         this.getDuration = function() {
             if ( !supported ) return null;
-            
+
             var duration = Math.round( this.sound.duration * 100 ) / 100;
-            return isNaN( duration ) ? '--' : duration;
+            return !duration ? boom.defaults.placeholder : duration;
         }
         this.setPercent = function( time ) {
             if ( !supported ) return this;
-            
-            this.sound.currentTime = this.sound.duration * time / 100;
-            return this;
+
+            return this.setTime( this.sound.duration * time / 100 );
         }
         this.getPercent = function() {
             if ( !supported ) return null;
-            
+
             var percent = Math.round( (this.sound.currentTime / this.sound.duration * 100 ) * 100) / 100;
-            return isNaN( percent ) ? '--' : percent;
+            return !percent ? boom.defaults.placeholder : percent;
         }
         this.set = function( key, value ) {
             if ( !supported ) return this;
-             
+
             this.sound[ key ] = value;
             return this;
         }
         this.get = function( key ) {
             if ( !supported ) return null;
-            
-            if ( key ) {
-                return this.sound[ key ];
-            }
-            return this.sound;
+
+            return key ? this.sound[ key ] : this.sound;
         }
         this.bind = function( type, func ) {
             if ( !supported ) return this;
-            
+
             var idx = type;
             if ( type.indexOf( '.' ) > -1 ) {
-				type = type.split( '.' )[1];
-			}
-			events.push( { idx: idx, func: func } );
-            this.sound.addEventListener( type, func, true ); 
+                type = type.split( '.' )[1];
+            }
+            events.push( { idx: idx, func: func } );
+            this.sound.addEventListener( type, func, true );
             return this;
         }
         this.unbind = function( type ) {
             if ( !supported ) return this;
-            
+
             var idx = type;
             if ( type.indexOf( '.' ) > -1 ) {
                 type = type.split( '.' )[1];
-			}
-			for( var i in events ) {
-			    var c = events[ i ].idx.match( /\.(.*)/ );
-			 	if ( events[ i ].idx == idx || ( c && c[1] == idx.replace('.', '') ) ) {
+            }
+            for( var i in events ) {
+                var namespace = events[ i ].idx.match( /\.(.*)/ );
+                 if ( events[ i ].idx == idx || ( namespace && namespace[1] == idx.replace('.', '') ) ) {
                     this.sound.removeEventListener( type, events[ i ].func );
                     delete events[ i ];
-			    }   
-			}
+                }   
+            }
             return this;
         }
         this.destroy = function() {
@@ -269,13 +254,13 @@ var boom = {
         }
     },
     all: function() {
-      return new boom.group( boom.sounds );  
+      return new boom.group( boom.sounds );
     },
     group: function( sounds ) {
         fn = function() {
             var args = Array.prototype.slice.call( arguments ),
                 func = args.shift();
-                
+
             for( var i in sounds ) {
                 sounds[ i ][ func ].apply( sounds[ i ], args );
             }
@@ -300,7 +285,7 @@ var boom = {
         }
         this.setVolume = function( volume ) {
             fn( 'setVolume', volume );
-        },
+        }
         this.increaseVolume = function( value ) {
             fn( 'increaseVolume', value );
         }
@@ -323,16 +308,13 @@ var boom = {
             fn( 'destroy' );
         }
     },
-    formatTime: function( seconds, displayHours ) {
-        hours = Math.floor( seconds / 3600 );
-        hours = isNaN( hours ) ? '--' : ( hours >= 10 ) ? hours : '0' + hours;            
-        minutes = displayHours ? Math.floor( seconds / 60 % 60 ) : Math.floor( seconds / 60 );
-        minutes = isNaN( minutes ) ? '--' : ( minutes >= 10 ) ? minutes : '0' + minutes;
-        seconds = Math.floor( seconds % 60 );
-        seconds = isNaN( seconds ) ? '--' : ( seconds >= 10 ) ? seconds : '0' + seconds;
-        if ( displayHours ) {
-            return hours + ':' + minutes + ':' + seconds;
-        }
-        return minutes + ':' + seconds;
+    formatTime: function( s, withHours ) {
+        h = Math.floor( s / 3600 );
+        h = !h ? '--' : ( h >= 10 ) ? h : '0' + h;            
+        m = withHours ? Math.floor( s / 60 % 60 ) : Math.floor( s / 60 );
+        m = !m ? '--' : ( m >= 10 ) ? m : '0' + m;
+        s = Math.floor( s % 60 );
+        s = !s ? '--' : ( s >= 10 ) ? s : '0' + s;
+        return withHours ? h + ':' + m + ':' + s : m + ':' + s;
     }
 }
