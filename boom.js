@@ -258,7 +258,7 @@ var boom = {
         }
         this.destroy = function() {
             if ( !supported ) return this;
-            
+
             for( var i in boom.sounds ) {
                 if ( boom.sounds[ i ] == this ) {
                     delete boom.sounds[ i ];
@@ -292,10 +292,10 @@ var boom = {
         this.togglePlay = function( ) {
             fn( 'togglePlay' );
         }
-        this.mute = function( ) {
+        this.mute = function() {
             fn( 'mute' );
         }
-        this.toggleMute = function( ) {
+        this.toggleMute = function() {
             fn( 'toggleMute' );
         }
         this.setVolume = function( volume ) {
@@ -318,6 +318,9 @@ var boom = {
         }
         this.unbind = function( type ) {
             fn( 'unbind', type );
+        }
+        this.destroy = function() {
+            fn( 'destroy' );
         }
     },
     formatTime: function( seconds, displayHours ) {
