@@ -106,13 +106,39 @@ var boom = {
             this.sound.pause();
             return this;
         }
+        this.isPaused = function() {
+            if ( !supported ) return this;
+            
+            return this.sound.paused;
+        }
+        this.mute = function() {
+            if ( !supported ) return this;
+            
+            this.sound.muted = true;
+            return this;
+        }
+        this.toggleMute = function() {
+            if ( !supported ) return this;
+            
+            if ( this.sound.muted ) {
+                this.sound.muted = false;
+            } else {
+                this.sound.muted = true;                
+            }
+            return this;
+        }
+        this.isMuted = function() {
+            if ( !supported ) return this;
+            
+            return this.sound.muted;
+        }
         this.jump = function( time ) {
             if ( !supported ) return this;
             
             this.setTime( time );
             return this;
         }
-        this.toggle = function() {
+        this.togglePlay = function() {
             if ( !supported ) return this;
             
             if ( this.sound.paused ) {
@@ -256,8 +282,14 @@ var boom = {
         this.jump = function( time ) {
             fn( 'jump', time );
         }
-        this.toggle = function( ) {
-            fn( 'toggle' );
+        this.togglePlay = function( ) {
+            fn( 'togglePlay' );
+        }
+        this.mute = function( ) {
+            fn( 'mute' );
+        }
+        this.toggleMute = function( ) {
+            fn( 'toggleMute' );
         }
         this.setVolume = function( volume ) {
             fn( 'setVolume', volume );
