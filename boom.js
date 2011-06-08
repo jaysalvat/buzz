@@ -95,10 +95,16 @@ var boom = {
         }
         this.stop = function() {
             if ( !supported ) return this;
-            
             this.sound.currentTime = 0;
+                     
             this.sound.pause();
+            
             return this;
+        }
+        this.isEnded = function() {
+            if ( !supported ) return null;
+            
+            return this.sound.ended;
         }
         this.pause = function() {
             if ( !supported ) return this;
@@ -107,7 +113,7 @@ var boom = {
             return this;
         }
         this.isPaused = function() {
-            if ( !supported ) return this;
+            if ( !supported ) return null;
             
             return this.sound.paused;
         }
@@ -128,7 +134,7 @@ var boom = {
             return this;
         }
         this.isMuted = function() {
-            if ( !supported ) return this;
+            if ( !supported ) return null;
             
             return this.sound.muted;
         }
@@ -188,7 +194,8 @@ var boom = {
         this.getTime = function() {
             if ( !supported ) return null;
 
-            return Math.round( this.sound.currentTime * 100 ) / 100;
+            var time = Math.round( this.sound.currentTime * 100 ) / 100;
+            return isNaN( time ) ? '--' : time;
         }
         this.getDuration = function() {
             if ( !supported ) return null;
@@ -270,7 +277,7 @@ var boom = {
                 func = args.shift();
                 
             for( var i in sounds ) {
-                sounds[ i ][ func ]( args );
+                sounds[ i ][ func ].apply( sounds[ i ], args );
             }
         }
         this.play = function() {
