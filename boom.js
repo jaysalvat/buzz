@@ -53,9 +53,9 @@ var boom = {
         var settings = settings || {},
             options = {},
             events = [],
-            ok = boom.isSupported();
+            supported = boom.isSupported();
         
-        if ( ok ) {
+        if ( supported ) {
             for( var i in boom.defaults ) {
                 options[ i ] = settings[ i ] || boom.defaults[ i ];
             }
@@ -82,38 +82,38 @@ var boom = {
             boom.sounds.push( this );
         }
         this.load = function() {
-            if ( !ok ) return this;
+            if ( !supported ) return this;
             
             this.sound.load();
             return this;
         }                
         this.play = function() {
-            if ( !ok ) return this;
+            if ( !supported ) return this;
             
             this.sound.play();
             return this;
         }
         this.stop = function() {
-            if ( !ok ) return this;
+            if ( !supported ) return this;
             
             this.sound.currentTime = 0;
             this.sound.pause();
             return this;
         }
         this.pause = function() {
-            if ( !ok ) return this;
+            if ( !supported ) return this;
             
             this.sound.pause();
             return this;
         }
         this.jump = function( time ) {
-            if ( !ok ) return this;
+            if ( !supported ) return this;
             
             this.setTime( time );
             return this;
         }
         this.toggle = function() {
-            if ( !ok ) return this;
+            if ( !supported ) return this;
             
             if ( this.sound.paused ) {
                 this.sound.play();
@@ -123,7 +123,7 @@ var boom = {
             return this;
         }
         this.setVolume = function( volume ) {
-            if ( !ok ) return this;
+            if ( !supported ) return this;
             
             if ( volume > 100 ) {
                 volume = 100;
@@ -147,7 +147,7 @@ var boom = {
             return this;
         }
         this.setTime = function( time ) {
-            if ( !ok ) return this;
+            if ( !supported ) return this;
 
             var splits = time.split( ':' );
             if ( splits.length == 3 ) {
@@ -160,34 +160,36 @@ var boom = {
             return this;
         }
         this.getTime = function() {
-            if ( !ok ) return null;
+            if ( !supported ) return null;
 
             return Math.round( this.sound.currentTime * 100 ) / 100;
         }
         this.getDuration = function() {
-            if ( !ok ) return null;
+            if ( !supported ) return null;
             
-            return Math.round( this.sound.duration * 100 ) / 100;
+            var duration = Math.round( this.sound.duration * 100 ) / 100;
+            return isNaN( duration ) ? '--' : duration;
         }
         this.setPercent = function( time ) {
-            if ( !ok ) return this;
+            if ( !supported ) return this;
             
             this.sound.currentTime = this.sound.duration * time / 100;
             return this;
         }
         this.getPercent = function() {
-            if ( !ok ) return null;
+            if ( !supported ) return null;
             
-            return Math.round( (this.sound.currentTime / this.sound.duration * 100 ) * 100) / 100;
+            var percent = Math.round( (this.sound.currentTime / this.sound.duration * 100 ) * 100) / 100;
+            return isNaN( percent ) ? '--' : percent;
         }
         this.set = function( key, value ) {
-            if ( !ok ) return this;
+            if ( !supported ) return this;
              
             this.sound[ key ] = value;
             return this;
         }
         this.get = function( key ) {
-            if ( !ok ) return null;
+            if ( !supported ) return null;
             
             if ( key ) {
                 return this.sound[ key ];
@@ -195,7 +197,7 @@ var boom = {
             return this.sound;
         }
         this.bind = function( type, func ) {
-            if ( !ok ) return this;
+            if ( !supported ) return this;
             
             var idx = type;
             if ( type.indexOf( '.' ) > -1 ) {
@@ -206,7 +208,7 @@ var boom = {
             return this;
         }
         this.unbind = function( type ) {
-            if ( !ok ) return this;
+            if ( !supported ) return this;
             
             var idx = type;
             if ( type.indexOf( '.' ) > -1 ) {
@@ -222,7 +224,7 @@ var boom = {
             return this;
         }
         this.destroy = function() {
-            if ( !ok ) return this;
+            if ( !supported ) return this;
             
             for( var i in boom.sounds ) {
                 if ( boom.sounds[ i ] == this ) {
@@ -281,14 +283,14 @@ var boom = {
     },
     formatTime: function( seconds, displayHours ) {
         hours = Math.floor( seconds / 3600 );
-        hours = ( hours >= 10 ) ? hours : "0" + hours;            
+        hours = isNaN( hours ) ? '--' : ( hours >= 10 ) ? hours : '0' + hours;            
         minutes = displayHours ? Math.floor( seconds / 60 % 60 ) : Math.floor( seconds / 60 );
-        minutes = ( minutes >= 10 ) ? minutes : "0" + minutes;
+        minutes = isNaN( minutes ) ? '--' : ( minutes >= 10 ) ? minutes : '0' + minutes;
         seconds = Math.floor( seconds % 60 );
-        seconds = ( seconds >= 10 ) ? seconds : "0" + seconds;
+        seconds = isNaN( seconds ) ? '--' : ( seconds >= 10 ) ? seconds : '0' + seconds;
         if ( displayHours ) {
-            return hours + ":" + minutes + ":" + seconds;
+            return hours + ':' + minutes + ':' + seconds;
         }
-        return minutes + ":" + seconds;
+        return minutes + ':' + seconds;
     }
 }
