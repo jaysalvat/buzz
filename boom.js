@@ -200,12 +200,13 @@ var boom = {
         this.bind = function( type, func ) {
             if ( !supported ) return this;
 
-            var idx = type;
+            var idx = type, 
+                that = this;
             if ( type.indexOf( '.' ) > -1 ) {
                 type = type.split( '.' )[1];
             }
             events.push( { idx: idx, func: func } );
-            this.sound.addEventListener( type, func, true );
+            this.sound.addEventListener( type, function(e) { func.call(that, e) }, true );
             return this;
         }
         this.unbind = function( type ) {
@@ -227,12 +228,12 @@ var boom = {
         this.bindOnce = function( type, func ) {
             var that = this;
             eventsOnce[ pid++ ] = false;
-            this.bind( type, function() {
+            this.bind( pid + type, function() {
                if ( !eventsOnce[ pid ] ) {
                    eventsOnce[ pid ] = true;
                    func.call( that );                   
                }
-               that.unbind( type );
+               that.unbind( pid + type );
             });
         }
         this.destroy = function() {
