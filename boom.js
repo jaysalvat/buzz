@@ -54,33 +54,7 @@ var boom = {
         var options = options || {},
             events = [],
             supported = boom.isSupported();
-            
-        if ( supported ) {
-            for( var i in boom.defaults ) {
-                options[ i ] = options[ i ] || boom.defaults[ i ];
-            }
 
-            this.sound = document.createElement( 'audio' );
-            if ( src instanceof Array) {
-                for( var i in src ) {
-                    var source = document.createElement( 'source' );
-                    source.src = src[ i ];
-                    this.sound.appendChild( source );
-                }
-            } else {
-                this.sound.src = src;
-            }
-            if ( options.loop ) {
-                this.sound.loop = 'loop';
-            }
-            if ( options.autoplay ) {
-                this.sound.autoplay = 'autoplay';
-            }
-            this.sound.preload = options.preload;
-            this.volume = options.volume;
-
-            boom.sounds.push( this );
-        }
         this.load = function() {
             if ( !supported ) return this;
 
@@ -257,6 +231,36 @@ var boom = {
                 }
             }
             return this;
+        }
+        
+        if ( supported ) {
+            for( var i in boom.defaults ) {
+                options[ i ] = options[ i ] || boom.defaults[ i ];
+            }
+
+            this.sound = document.createElement( 'audio' );
+            if ( src instanceof Array) {
+                for( var i in src ) {
+                    var source = document.createElement( 'source' );
+                    source.src = src[ i ];
+                    this.sound.appendChild( source );
+                }
+            } else {
+                this.sound.src = src;
+            }
+            if ( options.loop ) {
+                this.bind('boomloop.ended', function() {
+                    this.currentTime = 0;
+                    this.play();
+                });
+            }
+            if ( options.autoplay ) {
+                this.sound.autoplay = 'autoplay';
+            }
+            this.sound.preload = options.preload;
+            this.volume = options.volume;
+
+            boom.sounds.push( this );
         }
     },
     all: function() {
