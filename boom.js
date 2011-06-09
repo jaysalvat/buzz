@@ -54,7 +54,9 @@ var boom = {
     },
     sound: function( src, options ) {
         var options = options || {},
+            pid = 0,
             events = [],
+            eventsOnce = {},
             supported = boom.isSupported();
 
         this.load = function() {
@@ -221,6 +223,17 @@ var boom = {
                 }   
             }
             return this;
+        }
+        this.bindOnce = function( type, func ) {
+            var that = this;
+            eventsOnce[ pid++ ] = false;
+            this.bind( type, function() {
+               if ( !eventsOnce[ pid ] ) {
+                   eventsOnce[ pid ] = true;
+                   func.call( that );                   
+               }
+               that.unbind( type );
+            });
         }
         this.destroy = function() {
             if ( !supported ) return this;
