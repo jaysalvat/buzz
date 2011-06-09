@@ -164,13 +164,13 @@ var boom = {
             if ( !supported ) return null;
 
             var time = Math.round( this.sound.currentTime * 100 ) / 100;
-            return !time ? boom.defaults.placeholder : time;
+            return isNaN(time) ? boom.defaults.placeholder : time;
         }
         this.getDuration = function() {
             if ( !supported ) return null;
 
             var duration = Math.round( this.sound.duration * 100 ) / 100;
-            return !duration ? boom.defaults.placeholder : duration;
+            return isNaN(duration) ? boom.defaults.placeholder : duration;
         }
         this.setPercent = function( time ) {
             if ( !supported ) return this;
@@ -181,7 +181,7 @@ var boom = {
             if ( !supported ) return null;
 
             var percent = Math.round( (this.sound.currentTime / this.sound.duration * 100 ) * 100) / 100;
-            return !percent ? boom.defaults.placeholder : percent;
+            return isNaN(percent) ? boom.defaults.placeholder : percent;
         }
         this.set = function( key, value ) {
             if ( !supported ) return this;
@@ -239,7 +239,7 @@ var boom = {
             }
 
             this.sound = document.createElement( 'audio' );
-            if ( src instanceof Array) {
+            if ( src instanceof Array ) {
                 for( var i in src ) {
                     var source = document.createElement( 'source' );
                     source.src = src[ i ];
@@ -323,11 +323,11 @@ var boom = {
     },
     formatTime: function( s, withHours ) {
         h = Math.floor( s / 3600 );
-        h = !h ? '--' : ( h >= 10 ) ? h : '0' + h;            
+        h = isNaN(h) ? '--' : ( h >= 10 ) ? h : '0' + h;            
         m = withHours ? Math.floor( s / 60 % 60 ) : Math.floor( s / 60 );
-        m = !m ? '--' : ( m >= 10 ) ? m : '0' + m;
+        m = isNaN(m) ? '--' : ( m >= 10 ) ? m : '0' + m;
         s = Math.floor( s % 60 );
-        s = !s ? '--' : ( s >= 10 ) ? s : '0' + s;
+        s = isNaN(s) ? '--' : ( s >= 10 ) ? s : '0' + s;
         return withHours ? h + ':' + m + ':' + s : m + ':' + s;
     }
 }
