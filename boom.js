@@ -122,6 +122,12 @@ var boom = {
             this.sound.muted = true;
             return this;
         }
+        this.unmute = function() {
+            if ( !supported ) return this;
+            
+            this.sound.muted = false;
+            return this;
+        }
         this.toggleMute = function() {
             if ( !supported ) return this;
 
@@ -271,14 +277,17 @@ var boom = {
         this.stop = function() {
             fn( 'stop' );
         }
-        this.jump = function( time ) {
-            fn( 'jump', time );
+        this.pause = function( time ) {
+            fn( 'pause', time );
         }
         this.togglePlay = function( ) {
             fn( 'togglePlay' );
         }
         this.mute = function() {
             fn( 'mute' );
+        }
+        this.unmute = function() {
+            fn( 'unmute' );
         }
         this.toggleMute = function() {
             fn( 'toggleMute' );
