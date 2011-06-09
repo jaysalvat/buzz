@@ -25,9 +25,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // ----------------------------------------------------------------------------
+
 var boom = {
     defaults: {
-        preload: 'metadata', // auto, metadata, none
+        preload: 'auto', // auto, metadata, none
         autoplay: false, // bool
         loop: false, // bool
         volume: 100,
@@ -147,18 +148,17 @@ var boom = {
         this.setTime = function( time ) {
             if ( !supported ) return this;
 
-            if ( time instanceof String) {
-                var splits = time.split( ':' );
-                if ( splits && splits.length == 3 ) {
-                    time = ( parseInt( splits[0] ) * 3600 ) + ( parseInt(splits[1] ) * 60 ) + parseInt( splits[2] );
-                } 
-                if ( splits && splits.length == 2 ) {
-                    time = ( parseInt( splits[0] ) * 60 ) + parseInt( splits[1] );
-                }
+            var splits = time.toString().split( ':' );
+            if ( splits && splits.length == 3 ) {
+                time = ( parseInt( splits[0] ) * 3600 ) + ( parseInt(splits[1] ) * 60 ) + parseInt( splits[2] );
+            } 
+            if ( splits && splits.length == 2 ) {
+                time = ( parseInt( splits[0] ) * 60 ) + parseInt( splits[1] );
             }
-            try {
+            
+            this.whenReady( function() {
                 this.sound.currentTime = time;
-            } catch(e) {}
+            });
             return this;
         }
         this.getTime = function() {
@@ -181,7 +181,7 @@ var boom = {
         this.getPercent = function() {
             if ( !supported ) return null;
 
-            var percent = Math.round( (this.sound.currentTime / this.sound.duration * 100 ) * 100) / 100;
+            var percent = Math.round( ( this.sound.currentTime / this.sound.duration * 100 ) * 100) / 100;
             return isNaN(percent) ? boom.defaults.placeholder : percent;
         }
         this.set = function( key, value ) {
@@ -238,6 +238,7 @@ var boom = {
             var delay = speed / 100,
                 that = this;
             this.volume = 0;
+            this.play();
             
             function doFade() {
                 setTimeout( function() {
@@ -276,7 +277,18 @@ var boom = {
                 sound.play().fadeIn( speed );
             }
         }
-        
+        this.whenReady = function( func ) {
+            var that = this;
+            if ( this.sound.readyState == 0 ) {
+                this.bind( 'boomwhenready.canplay', function() {
+                    func.call( that );
+                });
+            } else {
+                func.call( that );
+            }
+        }
+
+
         // init
         if ( supported ) {
             for( var i in boom.defaults ) {
