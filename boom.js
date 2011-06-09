@@ -268,6 +268,14 @@ var boom = {
             }
             doFade();
         }
+        this.fadeWith = function( sound, speed ) {
+            this.fadeOut( speed, function() {
+                this.stop();
+            });
+            if ( sound instanceof boom.sound) {
+                sound.play().fadeIn( speed );
+            }
+        }
         
         // init
         if ( supported ) {
@@ -286,7 +294,7 @@ var boom = {
                 this.sound.src = src;
             }
             if ( options.loop ) {
-                this.bind('boomloop.ended', function() {
+                this.bind( 'boomloop.ended', function() {
                     this.currentTime = 0;
                     this.play();
                 });
@@ -300,6 +308,12 @@ var boom = {
             boom.sounds.push( this );
         }
     },
+    // fade: function( sounds, speed ) {
+    //   for ( var i in sounds ) {
+    //       if ( sounds )
+    //       sounds[ i ].bind( 'boomfade', function)
+    //   }
+    // },
     all: function() {
       return new boom.group( boom.sounds );
     },
