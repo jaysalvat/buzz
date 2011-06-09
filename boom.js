@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// Boom - A tiny audio library 
+// Boom - A HTML5 audio library 
 // v 1.0 alpha
 // Dual licensed under the MIT and GPL licenses.
 // http://boom.jaysalvat.com/
@@ -31,7 +31,8 @@ var boom = {
         autoplay: false, // bool
         loop: false, // bool
         volume: 100,
-        placeholder: '--'
+        placeholder: '--',
+        fadeSpeed: 5000
     },
     sounds: [],
     el: document.createElement( 'audio' ),
@@ -232,7 +233,43 @@ var boom = {
             }
             return this;
         }
+        this.fadeIn = function( speed, callback ) {
+            speed = speed || boom.defaults.fadeSpeed;
+            var delay = speed / 100,
+                that = this;
+            this.volume = 0;
+            
+            function doFade() {
+                setTimeout( function() {
+                    if ( that.volume < 100 ) {
+                        that.setVolume( that.volume += 1 );
+                        doFade();
+                    } else if ( callback instanceof Function ) {
+                        callback.apply( that );
+                    }
+                }, delay );
+            }
+            doFade();
+        }
+        this.fadeOut = function( speed, callback ) {
+            speed = speed || boom.defaults.fadeSpeed;
+            var delay = speed / this.volume,
+                that = this;
+
+            function doFade() {
+                setTimeout( function() {
+                    if ( that.volume > 0 ) {
+                        that.setVolume( that.volume -= 1 );
+                        doFade();
+                    } else if ( callback instanceof Function ) {
+                        callback.apply( that );
+                    }
+                }, delay );
+            }
+            doFade();
+        }
         
+        // init
         if ( supported ) {
             for( var i in boom.defaults ) {
                 options[ i ] = options[ i ] || boom.defaults[ i ];
@@ -319,6 +356,12 @@ var boom = {
         }
         this.destroy = function() {
             fn( 'destroy' );
+        }
+        this.fadeIn = function( speed, callback ) {
+            fn( 'fadeIn', speed, callback );
+        }
+        this.fadeOut = function( speed, callback ) {
+            fn( 'fadeOut', speed, callback );
         }
     },
     formatTime: function( s, withHours ) {
