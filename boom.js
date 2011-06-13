@@ -200,11 +200,10 @@ var boom = {
         this.bind = function( type, func ) {
             if ( !supported ) return this;
 
-            var idx = type, 
-                that = this;
-            if ( type.indexOf( '.' ) > -1 ) {
-                type = type.split( '.' )[1];
-            }
+            var that = this,
+				idx = type;                
+				type = type.split( '.' )[0];
+
             events.push( { idx: idx, func: func } );
             this.sound.addEventListener( type, function(e) { func.call(that, e) }, true );
             return this;
@@ -213,13 +212,13 @@ var boom = {
             if ( !supported ) return this;
 
             var idx = type;
-            if ( type.indexOf( '.' ) > -1 ) {
-                type = type.split( '.' )[1];
-            }
+				type = type.split( '.' )[0];
+
             for( var i in events ) {
-                var namespace = events[ i ].idx.match( /\.(.*)/ );
-                 if ( events[ i ].idx == idx || ( namespace && namespace[1] == idx.replace('.', '') ) ) {
-                    this.sound.removeEventListener( type, events[ i ].func );
+                var namespace = events[ i ].idx.split( '.' );
+                if ( events[ i ].idx == idx || ( namespace[1] && namespace[1] == idx.replace( '.', '' ) ) ) {
+					this.sound.removeEventListener( type, events[ i ].func, true );
+					console.log( ' unbind ' + events[ i ].idx );
                     delete events[ i ];
                 }   
             }
@@ -294,14 +293,13 @@ var boom = {
         this.whenReady = function( func ) {
             var that = this;
             if ( this.sound.readyState == 0 ) {
-                this.bind( 'boomwhenready.canplay', function() {
+                this.bind( 'canplay.boomwhenready', function() {
                     func.call( that );
                 });
             } else {
                 func.call( that );
             }
         }
-
 
         // init
         if ( supported ) {
@@ -320,7 +318,7 @@ var boom = {
                 this.sound.src = src;
             }
             if ( options.loop ) {
-                this.bind( 'boomloop.ended', function() {
+                this.bind( 'ended.boomloop', function() {
                     this.currentTime = 0;
                     this.play();
                 });
@@ -334,12 +332,6 @@ var boom = {
             boom.sounds.push( this );
         }
     },
-    // fade: function( sounds, speed ) {
-    //   for ( var i in sounds ) {
-    //       if ( sounds )
-    //       sounds[ i ].bind( 'boomfade', function)
-    //   }
-    // },
     all: function() {
       return new boom.group( boom.sounds );
     },
