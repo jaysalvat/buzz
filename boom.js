@@ -164,6 +164,17 @@ var boom = {
             });
             return this;
         }
+        this.loop = function() {
+            this.sound.loop = true;
+            this.bind( 'ended.boomloop', function() {
+                this.currentTime = 0;
+                this.play();
+            });
+        }
+        this.unloop = function() {
+            this.sound.removeAttribute( 'loop' );
+            this.unbind( 'ended.boomloop' );
+        }
         this.getTime = function() {
             if ( !supported ) return null;
 
@@ -325,10 +336,7 @@ var boom = {
                 this.sound.src = src;
             }
             if ( options.loop ) {
-                this.bind( 'ended.boomloop', function() {
-                    this.currentTime = 0;
-                    this.play();
-                });
+                this.loop();
             }
             if ( options.autoplay ) {
                 this.sound.autoplay = 'autoplay';
@@ -380,6 +388,12 @@ var boom = {
         }
         this.decreaseVolume = function( value ) {
             fn( 'decreaseVolume', value );
+        }
+        this.loop = function() {
+            fn( 'loop' );
+        }
+        this.unloop = function() {
+            fn( 'unloop' );
         }
         this.setTime = function( time ) {
             fn( 'setTime', time );
