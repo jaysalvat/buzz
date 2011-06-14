@@ -237,6 +237,8 @@ var boom = {
             return this;
         }
         this.bindOnce = function( type, func ) {
+            if ( !supported ) return this;
+            
             var that = this;
             eventsOnce[ pid++ ] = false;
             this.bind( pid + type, function() {
@@ -312,7 +314,7 @@ var boom = {
                 func.call( that );
             }
         }
-
+        
         // init
         if ( supported ) {
             for( var i in boom.defaults ) {
