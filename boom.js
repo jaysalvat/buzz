@@ -172,7 +172,7 @@ var boom = {
             });
         }
         this.unloop = function() {
-            this.sound.removeAttribute( 'loop' );
+            this.sound.removeAttribute( 'loop');
             this.unbind( 'ended.boomloop' );
         }
         this.getTime = function() {
@@ -361,60 +361,79 @@ var boom = {
         }
         this.play = function() {
             fn( 'play' );
+            return this;
         }
         this.stop = function() {
             fn( 'stop' );
+            return this;
         }
         this.pause = function( time ) {
             fn( 'pause', time );
+            return this;
         }
         this.togglePlay = function( ) {
             fn( 'togglePlay' );
+            return this;
         }
         this.mute = function() {
             fn( 'mute' );
+            return this;
         }
         this.unmute = function() {
             fn( 'unmute' );
+            return this;
         }
         this.toggleMute = function() {
             fn( 'toggleMute' );
+            return this;
         }
         this.setVolume = function( volume ) {
             fn( 'setVolume', volume );
+            return this;
         }
         this.increaseVolume = function( value ) {
             fn( 'increaseVolume', value );
+            return this;
         }
         this.decreaseVolume = function( value ) {
             fn( 'decreaseVolume', value );
+            return this;
         }
         this.loop = function() {
             fn( 'loop' );
+            return this;
         }
         this.unloop = function() {
             fn( 'unloop' );
+            return this;
         }
         this.setTime = function( time ) {
             fn( 'setTime', time );
+            return this;
         }
         this.set = function( key, value ) {
             fn( 'set', key, value );
+            return this;
         }
         this.bind = function( type, func ) {
             fn( 'bind', type, func );
+            return this;
         }
         this.unbind = function( type ) {
             fn( 'unbind', type );
+            return this;
         }
         this.destroy = function() {
             fn( 'destroy' );
+            return this;
         }
         this.fadeIn = function( speed, callback ) {
             fn( 'fadeIn', speed, callback );
+            return this;
         }
         this.fadeOut = function( speed, callback ) {
             fn( 'fadeOut', speed, callback );
+            return this;
         }
     },
     formatTime: function( s, withHours ) {
