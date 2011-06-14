@@ -33,12 +33,13 @@ var boom = {
         loop: false, // bool
         volume: 100,
         placeholder: '--',
-        fadeSpeed: 5000
+        fadeSpeed: 5000,
+        formats: []
     },
     sounds: [],
     el: document.createElement( 'audio' ),
     isSupported: function() {
-        return  !!( this.el.canPlayType );
+        return !!( this.el.canPlayType );
     },
     isOGGSupported: function() {
         return !!this.el.canPlayType && this.el.canPlayType( 'audio/ogg; codecs="vorbis"' );
@@ -313,6 +314,12 @@ var boom = {
                     var source = document.createElement( 'source' );
                     source.src = src[ i ];
                     this.sound.appendChild( source );
+                }
+            } else if ( options.formats.length ) {
+                for( var i in options.formats ) {
+                    var source = document.createElement( 'source' );
+                    source.src = src + '.' + options.formats[ i ];
+                    this.sound.appendChild( source );     
                 }
             } else {
                 this.sound.src = src;
