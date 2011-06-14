@@ -184,7 +184,7 @@ var boom = {
         this.getPercent = function() {
             if ( !supported ) return null;
 
-            var percent = Math.round( ( this.sound.currentTime / this.sound.duration * 100 ) * 100) / 100;
+            var percent = Math.round( ( this.sound.currentTime / this.sound.duration * 100 ) * 100 ) / 100;
             return isNaN(percent) ? boom.defaults.placeholder : percent;
         }
         this.set = function( key, value ) {
@@ -219,7 +219,6 @@ var boom = {
                 var namespace = events[ i ].idx.split( '.' );
                 if ( events[ i ].idx == idx || ( namespace[1] && namespace[1] == idx.replace( '.', '' ) ) ) {
 					this.sound.removeEventListener( type, events[ i ].func, true );
-					console.log( ' unbind ' + events[ i ].idx );
                     delete events[ i ];
                 }   
             }
