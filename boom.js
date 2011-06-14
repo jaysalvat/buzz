@@ -203,10 +203,11 @@ var boom = {
 
             var that = this,
 				idx = type;                
-				type = type.split( '.' )[0];
+				type = type.split( '.' )[0],
+				efunc = function(e) { func.call(that, e) };
 
-            events.push( { idx: idx, func: func } );
-            this.sound.addEventListener( type, function(e) { func.call(that, e) }, true );
+            events.push( { idx: idx, func: efunc } );
+            this.sound.addEventListener( type, efunc, true );
             return this;
         }
         this.unbind = function( type ) {
