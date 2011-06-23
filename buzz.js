@@ -260,6 +260,34 @@ var buzz = {
             }
             return this;
         }
+        this.fade = function( from, to, speed, callback ) {
+            if ( speed instanceof Function ) {
+                callback = speed;
+                speed = buzz.defaults.fadeSpeed;
+            } else {
+                speed = speed || buzz.defaults.fadeSpeed;
+            }
+
+            var delay = speed / Math.abs( from - to ),
+                that = this;
+            this.play();
+            that.setVolume( from );
+            
+            function doFade() {
+                setTimeout( function() {
+                    if ( from < to && that.volume < to ) {
+                        that.setVolume( that.volume += 1 );
+                        doFade();
+                    } else if ( from > to && that.volume > to ) {
+                        that.setVolume( that.volume -= 1 );
+                        doFade();                        
+                    } else if ( callback instanceof Function ) {
+                        callback.apply( that );
+                    }
+                }, delay );
+            }
+            doFade();
+        }
         this.fadeIn = function( speed, callback ) {
             speed = speed || buzz.defaults.fadeSpeed;
             var delay = speed / 100,
@@ -427,6 +455,10 @@ var buzz = {
         }
         this.destroy = function() {
             fn( 'destroy' );
+            return this;
+        }
+        this.fade = function( from, to, speed, callback ) {
+            fn( 'fade', from, to, speed, callback );
             return this;
         }
         this.fadeIn = function( speed, callback ) {
