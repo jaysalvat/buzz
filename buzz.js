@@ -72,17 +72,15 @@ var buzz = {
             this.sound.play();
             return this;
         }
-        this.stop = function() {
-            if ( !supported  ) return this;
+        this.togglePlay = function() {
+            if ( !supported ) return this;
             
-            this.setTime( 0 );
-            this.sound.pause();
+            if ( this.sound.paused ) {
+                this.sound.play();
+            } else {
+                this.sound.pause();
+            }
             return this;
-        }
-        this.isEnded = function() {
-            if ( !supported ) return null;
-
-            return this.sound.ended;
         }
         this.pause = function() {
             if ( !supported ) return this;
@@ -94,6 +92,18 @@ var buzz = {
             if ( !supported ) return null;
 
             return this.sound.paused;
+        }
+        this.stop = function() {
+            if ( !supported  ) return this;
+            
+            this.setTime( 0 );
+            this.sound.pause();
+            return this;
+        }
+        this.isEnded = function() {
+            if ( !supported ) return null;
+
+            return this.sound.ended;
         }
         this.loop = function() {
             this.sound.loop = true;
@@ -128,16 +138,6 @@ var buzz = {
             if ( !supported ) return null;
 
             return this.sound.muted;
-        }
-        this.togglePlay = function() {
-            if ( !supported ) return this;
-            
-            if ( this.sound.paused ) {
-                this.sound.play();
-            } else {
-                this.sound.pause();
-            }
-            return this;
         }
         this.setVolume = function( volume ) {
             if ( !supported ) return this;
@@ -201,20 +201,6 @@ var buzz = {
 
             return key ? this.sound[ key ] : this.sound;
         }
-        this.trigger = function( type ) {
-            if ( !supported ) return this;
-
-            var idx = type;
-				type = type.split( '.' )[ 0 ];
-
-            for( var i in events ) {
-                var namespace = events[ i ].idx.split( '.' );
-                if ( events[ i ].idx == idx || ( namespace[ 0 ] && namespace[ 0 ] == idx.replace( '.', '' ) ) ) {
-					events[ i ].func.apply( this );
-                }   
-            }
-            return this;
-        }
         this.bind = function( type, func ) {
             if ( !supported ) return this;
 
@@ -255,14 +241,16 @@ var buzz = {
                that.unbind( pid + type );
             });
         }
-        this.destroy = function() {
+        this.trigger = function( type ) {
             if ( !supported ) return this;
 
-            for( var i in buzz.sounds ) {
-                if ( buzz.sounds[ i ] == this ) {
-                    delete buzz.sounds[ i ];
-                    break;
-                }
+            var idx = type;
+
+            for( var i in events ) {
+                var namespace = events[ i ].idx.split( '.' );
+                if ( events[ i ].idx == idx || ( namespace[ 0 ] && namespace[ 0 ] == idx.replace( '.', '' ) ) ) {
+					events[ i ].func.apply( this );
+                }   
             }
             return this;
         }
@@ -334,9 +322,20 @@ var buzz = {
             this.fadeOut( speed, function() {
                 this.stop();
             });
-            if ( sound instanceof buzz.sound) {
+            if ( sound instanceof buzz.sound ) {
                 sound.play().fadeIn( speed );
             }
+        }
+        this.destroy = function() {
+            if ( !supported ) return this;
+
+            for( var i in buzz.sounds ) {
+                if ( buzz.sounds[ i ] == this ) {
+                    delete buzz.sounds[ i ];
+                    break;
+                }
+            }
+            return this;
         }
         this.whenReady = function( func ) {
             var that = this;
@@ -395,20 +394,24 @@ var buzz = {
                 sounds[ i ][ func ].apply( sounds[ i ], args );
             }
         }
+        this.load = function() {
+            fn( 'load' );
+            return this;
+        }
         this.play = function() {
             fn( 'play' );
             return this;
         }
-        this.stop = function() {
-            fn( 'stop' );
+        this.togglePlay = function( ) {
+            fn( 'togglePlay' );
             return this;
         }
         this.pause = function( time ) {
             fn( 'pause', time );
             return this;
         }
-        this.togglePlay = function( ) {
-            fn( 'togglePlay' );
+        this.stop = function() {
+            fn( 'stop' );
             return this;
         }
         this.mute = function() {
@@ -451,10 +454,6 @@ var buzz = {
             fn( 'set', key, value );
             return this;
         }
-        this.trigger = function( type ) {
-            fn( 'trigger', type );
-            return this;
-        }
         this.bind = function( type, func ) {
             fn( 'bind', type, func );
             return this;
@@ -463,8 +462,12 @@ var buzz = {
             fn( 'unbind', type );
             return this;
         }
-        this.destroy = function() {
-            fn( 'destroy' );
+        this.bindOnce = function( type, func ) {
+            fn( 'bindOnce', type, func );
+            return this;
+        }
+        this.trigger = function( type ) {
+            fn( 'trigger', type );
             return this;
         }
         this.fade = function( from, to, speed, callback ) {
@@ -477,6 +480,10 @@ var buzz = {
         }
         this.fadeOut = function( speed, callback ) {
             fn( 'fadeOut', speed, callback );
+            return this;
+        }
+        this.destroy = function() {
+            fn( 'destroy' );
             return this;
         }
     },
