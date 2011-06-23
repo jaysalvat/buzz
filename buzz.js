@@ -95,6 +95,17 @@ var buzz = {
 
             return this.sound.paused;
         }
+        this.loop = function() {
+            this.sound.loop = true;
+            this.bind( 'ended.buzzloop', function() {
+                this.currentTime = 0;
+                this.play();
+            });
+        }
+        this.unloop = function() {
+            this.sound.removeAttribute( 'loop');
+            this.unbind( 'ended.buzzloop' );
+        }
         this.mute = function() {
             if ( !supported ) return this;
             
@@ -164,28 +175,11 @@ var buzz = {
             });
             return this;
         }
-        this.loop = function() {
-            this.sound.loop = true;
-            this.bind( 'ended.buzzloop', function() {
-                this.currentTime = 0;
-                this.play();
-            });
-        }
-        this.unloop = function() {
-            this.sound.removeAttribute( 'loop');
-            this.unbind( 'ended.buzzloop' );
-        }
         this.getTime = function() {
             if ( !supported ) return null;
 
             var time = Math.round( this.sound.currentTime * 100 ) / 100;
             return isNaN(time) ? buzz.defaults.placeholder : time;
-        }
-        this.getDuration = function() {
-            if ( !supported ) return null;
-
-            var duration = Math.round( this.sound.duration * 100 ) / 100;
-            return isNaN(duration) ? buzz.defaults.placeholder : duration;
         }
         this.setPercent = function( time ) {
             if ( !supported ) return this;
@@ -197,6 +191,12 @@ var buzz = {
 
             var percent = Math.round( ( this.sound.currentTime / this.sound.duration * 100 ) * 100 ) / 100;
             return isNaN(percent) ? buzz.defaults.placeholder : percent;
+        }
+        this.getDuration = function() {
+            if ( !supported ) return null;
+
+            var duration = Math.round( this.sound.duration * 100 ) / 100;
+            return isNaN(duration) ? buzz.defaults.placeholder : duration;
         }
         this.set = function( key, value ) {
             if ( !supported ) return this;
