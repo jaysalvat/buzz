@@ -75,7 +75,7 @@ var buzz = {
         this.stop = function() {
             if ( !supported  ) return this;
             
-            this.setTime(0);
+            this.setTime( 0 );
             this.sound.pause();
             return this;
         }
@@ -161,14 +161,6 @@ var buzz = {
         }
         this.setTime = function( time ) {
             if ( !supported ) return this;
-
-            var splits = time.toString().split( ':' );
-            if ( splits && splits.length == 3 ) {
-                time = ( parseInt( splits[0] ) * 3600 ) + ( parseInt(splits[1] ) * 60 ) + parseInt( splits[2] );
-            } 
-            if ( splits && splits.length == 2 ) {
-                time = ( parseInt( splits[0] ) * 60 ) + parseInt( splits[1] );
-            }
             
             this.whenReady( function() {
                 this.sound.currentTime = time;
@@ -179,7 +171,7 @@ var buzz = {
             if ( !supported ) return null;
 
             var time = Math.round( this.sound.currentTime * 100 ) / 100;
-            return isNaN(time) ? buzz.defaults.placeholder : time;
+            return isNaN( time ) ? buzz.defaults.placeholder : time;
         }
         this.setPercent = function( time ) {
             if ( !supported ) return this;
@@ -190,13 +182,13 @@ var buzz = {
             if ( !supported ) return null;
 
             var percent = Math.round( ( this.sound.currentTime / this.sound.duration * 100 ) * 100 ) / 100;
-            return isNaN(percent) ? buzz.defaults.placeholder : percent;
+            return isNaN( percent ) ? buzz.defaults.placeholder : percent;
         }
         this.getDuration = function() {
             if ( !supported ) return null;
 
             var duration = Math.round( this.sound.duration * 100 ) / 100;
-            return isNaN(duration) ? buzz.defaults.placeholder : duration;
+            return isNaN( duration ) ? buzz.defaults.placeholder : duration;
         }
         this.set = function( key, value ) {
             if ( !supported ) return this;
@@ -228,8 +220,8 @@ var buzz = {
 
             var that = this,
 				idx = type;                
-				type = type.split( '.' )[0],
-				efunc = function(e) { func.call( that, e ) };
+				type = type.split( '.' )[ 0 ],
+				efunc = function( e ) { func.call( that, e ) };
 
             events.push( { idx: idx, func: efunc } );
             this.sound.addEventListener( type, efunc, true );
@@ -488,13 +480,23 @@ var buzz = {
             return this;
         }
     },
-    formatTime: function( s, withHours ) {
-        h = Math.floor( s / 3600 );
-        h = isNaN(h) ? '--' : ( h >= 10 ) ? h : '0' + h;            
-        m = withHours ? Math.floor( s / 60 % 60 ) : Math.floor( s / 60 );
-        m = isNaN(m) ? '--' : ( m >= 10 ) ? m : '0' + m;
-        s = Math.floor( s % 60 );
-        s = isNaN(s) ? '--' : ( s >= 10 ) ? s : '0' + s;
+    formatTime: function( time, withHours ) {
+        h = Math.floor( time / 3600 );
+        h = isNaN( h ) ? '--' : ( h >= 10 ) ? h : '0' + h;            
+        m = withHours ? Math.floor( time / 60 % 60 ) : Math.floor( time / 60 );
+        m = isNaN( m ) ? '--' : ( m >= 10 ) ? m : '0' + m;
+        s = Math.floor( time % 60 );
+        s = isNaN( s ) ? '--' : ( time >= 10 ) ? s : '0' + s;
         return withHours ? h + ':' + m + ':' + s : m + ':' + s;
+    },
+    unformatTime: function( time ) {
+        var splits = time.toString().split( ':' );
+        if ( splits && splits.length == 3 ) {
+            time = ( parseInt( splits[ 0 ] ) * 3600 ) + ( parseInt(splits[ 1 ] ) * 60 ) + parseInt( splits[ 2 ] );
+        } 
+        if ( splits && splits.length == 2 ) {
+            time = ( parseInt( splits[ 0 ] ) * 60 ) + parseInt( splits[ 1 ] );
+        }
+        return time;
     }
 }
