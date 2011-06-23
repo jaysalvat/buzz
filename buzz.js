@@ -209,13 +209,27 @@ var buzz = {
 
             return key ? this.sound[ key ] : this.sound;
         }
+        this.trigger = function( type ) {
+            if ( !supported ) return this;
+
+            var idx = type;
+				type = type.split( '.' )[ 0 ];
+
+            for( var i in events ) {
+                var namespace = events[ i ].idx.split( '.' );
+                if ( events[ i ].idx == idx || ( namespace[ 0 ] && namespace[ 0 ] == idx.replace( '.', '' ) ) ) {
+					events[ i ].func.apply( this );
+                }   
+            }
+            return this;
+        }
         this.bind = function( type, func ) {
             if ( !supported ) return this;
 
             var that = this,
 				idx = type;                
 				type = type.split( '.' )[0],
-				efunc = function(e) { func.call(that, e) };
+				efunc = function(e) { func.call( that, e ) };
 
             events.push( { idx: idx, func: efunc } );
             this.sound.addEventListener( type, efunc, true );
@@ -225,11 +239,11 @@ var buzz = {
             if ( !supported ) return this;
 
             var idx = type;
-				type = type.split( '.' )[0];
+				type = type.split( '.' )[ 0 ];
 
             for( var i in events ) {
                 var namespace = events[ i ].idx.split( '.' );
-                if ( events[ i ].idx == idx || ( namespace[1] && namespace[1] == idx.replace( '.', '' ) ) ) {
+                if ( events[ i ].idx == idx || ( namespace[ 1 ] && namespace[ 1 ] == idx.replace( '.', '' ) ) ) {
 					this.sound.removeEventListener( type, events[ i ].func, true );
                     delete events[ i ];
                 }   
@@ -443,6 +457,10 @@ var buzz = {
         }
         this.set = function( key, value ) {
             fn( 'set', key, value );
+            return this;
+        }
+        this.trigger = function( type ) {
+            fn( 'trigger', type );
             return this;
         }
         this.bind = function( type, func ) {
