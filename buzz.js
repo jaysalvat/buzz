@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
-// Boom - A HTML5 audio library 
+// buzz - A HTML5 audio library 
 // v 1.0 alpha
 // Dual licensed under the MIT and GPL licenses.
-// http://boom.jaysalvat.com/
+// http://buzz.jaysalvat.com/
 // ----------------------------------------------------------------------------
 // Copyright (C) 2011 Jay Salvat
 // http://jaysalvat.com/
@@ -26,7 +26,7 @@
 // THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
-var boom = {
+var buzz = {
     defaults: {
         preload: 'auto', // auto, metadata, none
         autoplay: false, // bool
@@ -58,7 +58,7 @@ var boom = {
             pid = 0,
             events = [],
             eventsOnce = {},
-            supported = boom.isSupported();
+            supported = buzz.isSupported();
 
         this.load = function() {
             if ( !supported ) return this;
@@ -166,26 +166,26 @@ var boom = {
         }
         this.loop = function() {
             this.sound.loop = true;
-            this.bind( 'ended.boomloop', function() {
+            this.bind( 'ended.buzzloop', function() {
                 this.currentTime = 0;
                 this.play();
             });
         }
         this.unloop = function() {
             this.sound.removeAttribute( 'loop');
-            this.unbind( 'ended.boomloop' );
+            this.unbind( 'ended.buzzloop' );
         }
         this.getTime = function() {
             if ( !supported ) return null;
 
             var time = Math.round( this.sound.currentTime * 100 ) / 100;
-            return isNaN(time) ? boom.defaults.placeholder : time;
+            return isNaN(time) ? buzz.defaults.placeholder : time;
         }
         this.getDuration = function() {
             if ( !supported ) return null;
 
             var duration = Math.round( this.sound.duration * 100 ) / 100;
-            return isNaN(duration) ? boom.defaults.placeholder : duration;
+            return isNaN(duration) ? buzz.defaults.placeholder : duration;
         }
         this.setPercent = function( time ) {
             if ( !supported ) return this;
@@ -196,7 +196,7 @@ var boom = {
             if ( !supported ) return null;
 
             var percent = Math.round( ( this.sound.currentTime / this.sound.duration * 100 ) * 100 ) / 100;
-            return isNaN(percent) ? boom.defaults.placeholder : percent;
+            return isNaN(percent) ? buzz.defaults.placeholder : percent;
         }
         this.set = function( key, value ) {
             if ( !supported ) return this;
@@ -252,16 +252,16 @@ var boom = {
         this.destroy = function() {
             if ( !supported ) return this;
 
-            for( var i in boom.sounds ) {
-                if ( boom.sounds[ i ] == this ) {
-                    delete boom.sounds[ i ];
+            for( var i in buzz.sounds ) {
+                if ( buzz.sounds[ i ] == this ) {
+                    delete buzz.sounds[ i ];
                     break;
                 }
             }
             return this;
         }
         this.fadeIn = function( speed, callback ) {
-            speed = speed || boom.defaults.fadeSpeed;
+            speed = speed || buzz.defaults.fadeSpeed;
             var delay = speed / 100,
                 that = this;
             this.volume = 0;
@@ -280,7 +280,7 @@ var boom = {
             doFade();
         }
         this.fadeOut = function( speed, callback ) {
-            speed = speed || boom.defaults.fadeSpeed;
+            speed = speed || buzz.defaults.fadeSpeed;
             var delay = speed / this.volume,
                 that = this;
 
@@ -300,14 +300,14 @@ var boom = {
             this.fadeOut( speed, function() {
                 this.stop();
             });
-            if ( sound instanceof boom.sound) {
+            if ( sound instanceof buzz.sound) {
                 sound.play().fadeIn( speed );
             }
         }
         this.whenReady = function( func ) {
             var that = this;
             if ( this.sound.readyState == 0 ) {
-                this.bind( 'canplay.boomwhenready', function() {
+                this.bind( 'canplay.buzzwhenready', function() {
                     func.call( that );
                 });
             } else {
@@ -317,8 +317,8 @@ var boom = {
         
         // init
         if ( supported ) {
-            for( var i in boom.defaults ) {
-                options[ i ] = options[ i ] || boom.defaults[ i ];
+            for( var i in buzz.defaults ) {
+                options[ i ] = options[ i ] || buzz.defaults[ i ];
             }
 
             this.sound = document.createElement( 'audio' );
@@ -346,11 +346,11 @@ var boom = {
             this.sound.preload = options.preload;
             this.volume = options.volume;
 
-            boom.sounds.push( this );
+            buzz.sounds.push( this );
         }
     },
     all: function() {
-      return new boom.group( boom.sounds );
+      return new buzz.group( buzz.sounds );
     },
     group: function( sounds ) {
         fn = function() {
