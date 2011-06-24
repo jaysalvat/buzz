@@ -210,6 +210,25 @@ var buzz = {
                     return null;
             }
         }
+        this.getStateCode = function() {
+            return this.sound.readyState;
+        }
+        this.getStateMessage = function() {
+            switch( this.getStateCode() ) {
+                case 0: 
+                    return 'HAVE_NOTHING';
+                case 1:
+                    return 'HAVE_METADATA';
+                case 2:
+                    return 'HAVE_CURRENT_DATA';
+                case 3: 
+                    return 'HAVE_FUTURE_DATA';
+                case 4: 
+                    return 'HAVE_ENOUGH_DATA';
+                default:
+                    return null;
+            }
+        }
         this.bind = function( types, func ) {
             if ( !supported ) return this;
 
