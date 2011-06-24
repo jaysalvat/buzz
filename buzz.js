@@ -201,30 +201,39 @@ var buzz = {
 
             return key ? this.sound[ key ] : this.sound;
         }
-        this.bind = function( type, func ) {
+        this.bind = function( types, func ) {
             if ( !supported ) return this;
 
             var that = this,
-				idx = type;                
-				type = type.split( '.' )[ 0 ],
+                types = types.split( ' ' ),
 				efunc = function( e ) { func.call( that, e ) };
+            
+            for( var t in types ) {
+                var type = types[ t ],
+                    idx = type;                
+				    type = idx.split( '.' )[ 0 ];
 
-            events.push( { idx: idx, func: efunc } );
-            this.sound.addEventListener( type, efunc, true );
+                    events.push( { idx: idx, func: efunc } );
+                    this.sound.addEventListener( type, efunc, true );
+            }
             return this;
         }
-        this.unbind = function( type ) {
+        this.unbind = function( types ) {
             if ( !supported ) return this;
 
-            var idx = type;
-				type = type.split( '.' )[ 0 ];
+            var types = types.split( ' ' );
+                        
+            for( var t in types ) {
+                var idx = types[ t ];
+				    type = idx.split( '.' )[ 0 ];
 
-            for( var i in events ) {
-                var namespace = events[ i ].idx.split( '.' );
-                if ( events[ i ].idx == idx || ( namespace[ 1 ] && namespace[ 1 ] == idx.replace( '.', '' ) ) ) {
-					this.sound.removeEventListener( type, events[ i ].func, true );
-                    delete events[ i ];
-                }   
+                for( var i in events ) {
+                    var namespace = events[ i ].idx.split( '.' );
+                    if ( events[ i ].idx == idx || ( namespace[ 1 ] && namespace[ 1 ] == idx.replace( '.', '' ) ) ) {
+				        this.sound.removeEventListener( type, events[ i ].func, true );
+                        delete events[ i ];
+                    }
+                }
             }
             return this;
         }
@@ -232,6 +241,7 @@ var buzz = {
             if ( !supported ) return this;
             
             var that = this;
+            
             eventsOnce[ pid++ ] = false;
             this.bind( pid + type, function() {
                if ( !eventsOnce[ pid ] ) {
@@ -241,16 +251,20 @@ var buzz = {
                that.unbind( pid + type );
             });
         }
-        this.trigger = function( type ) {
+        this.trigger = function( types ) {
             if ( !supported ) return this;
 
-            var idx = type;
+            var types = types.split( ' ' );
+                        
+            for( var t in types ) {
+                var idx = types[ t ];
 
-            for( var i in events ) {
-                var namespace = events[ i ].idx.split( '.' );
-                if ( events[ i ].idx == idx || ( namespace[ 0 ] && namespace[ 0 ] == idx.replace( '.', '' ) ) ) {
-					events[ i ].func.apply( this );
-                }   
+                for( var i in events ) {
+                    var namespace = events[ i ].idx.split( '.' );
+                    if ( events[ i ].idx == idx || ( namespace[ 0 ] && namespace[ 0 ] == idx.replace( '.', '' ) ) ) {
+					    events[ i ].func.apply( this );
+                    }   
+                }
             }
             return this;
         }
