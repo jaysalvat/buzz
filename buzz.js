@@ -229,6 +229,23 @@ var buzz = {
                     return null;
             }
         }
+        this.getNetworkStateCode = function() {
+            return this.sound.networkState;
+        }
+        this.getNetworkStateMessage = function() {
+            switch( this.getNetworkStateCode() ) {
+                case 0: 
+                    return 'NETWORK_EMPTY';
+                case 1:
+                    return 'NETWORK_IDLE';
+                case 2:
+                    return 'NETWORK_LOADING';
+                case 3: 
+                    return 'NETWORK_NO_SOURCE';
+                default:
+                    return null;
+            }
+        }
         this.bind = function( types, func ) {
             if ( !supported ) return this;
 
