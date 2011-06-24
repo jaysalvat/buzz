@@ -167,6 +167,12 @@ var buzz = {
             var percent = Math.round( ( this.sound.currentTime / this.sound.duration * 100 ) * 100 ) / 100;
             return isNaN( percent ) ? buzz.defaults.placeholder : percent;
         }
+        this.setSpeed = function( speed ) {
+            this.sound.playbackRate = speed;
+        }
+        this.getSpeed = function() {
+            return this.sound.playbackRate;
+        }
         this.getDuration = function() {
             if ( !supported ) return null;
 
@@ -448,6 +454,10 @@ var buzz = {
         }
         this.setTime = function( time ) {
             fn( 'setTime', time );
+            return this;
+        }
+        this.setSpeed = function( speed ) {
+            fn( 'setSpeed', speed );
             return this;
         }
         this.set = function( key, value ) {
