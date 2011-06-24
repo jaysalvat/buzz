@@ -190,6 +190,26 @@ var buzz = {
 
             return key ? this.sound[ key ] : this.sound;
         }
+        this.getErrorCode = function() {
+            if ( this.sound.error ) {
+                return this.sound.error.code;
+            }
+            return 0;
+        }
+        this.getErrorMessage = function() {
+            switch( this.getErrorCode() ) {
+                case 1: 
+                    return 'MEDIA_ERR_ABORTED';
+                case 2:
+                    return 'MEDIA_ERR_NETWORK';
+                case 3:
+                    return 'MEDIA_ERR_DECODE';
+                case 4: 
+                    return 'MEDIA_ERR_SRC_NOT_SUPPORTED';
+                default:
+                    return null;
+            }
+        }
         this.bind = function( types, func ) {
             if ( !supported ) return this;
 
