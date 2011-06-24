@@ -28,7 +28,7 @@
 
 var buzz = {
     defaults: {
-        preload: 'auto', // auto, metadata, none
+        preload: 'metadata', // bool | 'metadata'
         autoplay: false, // bool
         loop: false, // bool
         placeholder: '--',
@@ -36,22 +36,6 @@ var buzz = {
         formats: []
     },
     sounds: [],
-    el: document.createElement( 'audio' ),
-    isSupported: function() {
-        return !!( this.el.canPlayType );
-    },
-    isOGGSupported: function() {
-        return !!this.el.canPlayType && this.el.canPlayType( 'audio/ogg; codecs="vorbis"' );
-    },
-    isWAVSupported: function() {
-        return !!this.el.canPlayType && this.el.canPlayType( 'audio/wav; codecs="1"' );
-    },
-    isMP3Supported: function() {
-        return !!this.el.canPlayType && this.el.canPlayType( 'audio/mpeg;' );
-    },
-    isAACSupported: function() {
-        return !!this.el.canPlayType && ( this.el.canPlayType( 'audio/x-m4a;' ) || this.el.canPlayType( 'audio/aac;' ) );
-    },
     sound: function( src, options ) {
         var options = options || {},
             pid = 0,
@@ -105,7 +89,7 @@ var buzz = {
             return this.sound.ended;
         }
         this.loop = function() {
-            this.sound.loop = true;
+            this.sound.loop = 'loop';
             this.bind( 'ended.buzzloop', function() {
                 this.currentTime = 0;
                 this.play();
@@ -389,14 +373,17 @@ var buzz = {
             if ( options.autoplay ) {
                 this.sound.autoplay = 'autoplay';
             }
-            this.sound.preload = options.preload;
+            if ( options.preload === true ) {
+                this.sound.preload = 'auto';
+            } else if ( options.preload === false ) {                
+                this.sound.preload = 'none';
+            } else {
+                this.sound.preload = options.preload;
+            }
             this.volume = options.volume;
 
             buzz.sounds.push( this );
         }
-    },
-    all: function() {
-      return new buzz.group( buzz.sounds );
     },
     group: function( sounds ) {
         fn = function() {
@@ -499,6 +486,25 @@ var buzz = {
             fn( 'destroy' );
             return this;
         }
+    },
+    all: function() {
+      return new buzz.group( buzz.sounds );
+    },
+    el: document.createElement( 'audio' ),
+    isSupported: function() {
+        return !!this.el.canPlayType;
+    },
+    isOGGSupported: function() {
+        return !!this.el.canPlayType && this.el.canPlayType( 'audio/ogg; codecs="vorbis"' );
+    },
+    isWAVSupported: function() {
+        return !!this.el.canPlayType && this.el.canPlayType( 'audio/wav; codecs="1"' );
+    },
+    isMP3Supported: function() {
+        return !!this.el.canPlayType && this.el.canPlayType( 'audio/mpeg;' );
+    },
+    isAACSupported: function() {
+        return !!this.el.canPlayType && ( this.el.canPlayType( 'audio/x-m4a;' ) || this.el.canPlayType( 'audio/aac;' ) );
     },
     formatTime: function( time, withHours ) {
         h = Math.floor( time / 3600 );
