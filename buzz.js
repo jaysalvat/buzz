@@ -31,7 +31,6 @@ var buzz = {
         preload: 'auto', // auto, metadata, none
         autoplay: false, // bool
         loop: false, // bool
-        volume: 100,
         placeholder: '--',
         fadeSpeed: 5000,
         formats: []
