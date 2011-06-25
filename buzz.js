@@ -364,17 +364,6 @@ var buzz = {
                 sound.play().fadeIn( speed );
             }
         }
-        this.destroy = function() {
-            if ( !supported ) return this;
-
-            for( var i in buzz.sounds ) {
-                if ( buzz.sounds[ i ] == this ) {
-                    delete buzz.sounds[ i ];
-                    break;
-                }
-            }
-            return this;
-        }
         this.whenReady = function( func ) {
             var that = this;
             if ( this.sound.readyState == 0 ) {
@@ -445,6 +434,17 @@ var buzz = {
 
             for( var i in sounds ) {
                 sounds[ i ][ func ].apply( sounds[ i ], args );
+            }
+        }
+        this.remove = function( soundArray ) {
+            var soundArray = ( soundArray instanceof Array ) ? soundArray : arguments
+            for( var a in soundArray) {
+                for( var i in sounds ) {
+                    if ( sounds[ i ] == soundArray[ a ] ) {
+                        delete sounds[ i ];
+                        break;
+                    }
+                }
             }
         }
         this.load = function() {
@@ -537,10 +537,6 @@ var buzz = {
         }
         this.fadeOut = function( speed, callback ) {
             fn( 'fadeOut', speed, callback );
-            return this;
-        }
-        this.destroy = function() {
-            fn( 'destroy' );
             return this;
         }
     },
