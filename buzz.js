@@ -28,9 +28,9 @@
 
 var buzz = {
     defaults: {
-        preload: 'metadata', // bool | 'metadata'
-        autoplay: false, // bool
-        loop: false, // bool
+        preload: 'metadata',
+        autoplay: false,
+        loop: false,
         placeholder: '--',
         fadeSpeed: 5000,
         formats: []
@@ -43,6 +43,7 @@ var buzz = {
             eventsOnce = {},
             supported = buzz.isSupported();
 
+        // publics
         this.load = function() {
             if ( !supported ) return this;
 
@@ -179,16 +180,14 @@ var buzz = {
             var duration = Math.round( this.sound.duration * 100 ) / 100;
             return isNaN( duration ) ? buzz.defaults.placeholder : duration;
         }
-        this.set = function( key, value ) {
-            if ( !supported ) return this;
-
-            this.sound[ key ] = value;
-            return this;
+        this.getPlayed = function() {
+            return timerangeToArray( this.sound.played );
         }
-        this.get = function( key ) {
-            if ( !supported ) return null;
-
-            return key ? this.sound[ key ] : this.sound;
+        this.getBuffered = function() {
+            return timerangeToArray( this.sound.buffered );
+        }
+        this.getSeekable = function() {
+            return timerangeToArray( this.sound.seekable );
         }
         this.getErrorCode = function() {
             if ( this.sound.error ) {
@@ -245,6 +244,17 @@ var buzz = {
                 default:
                     return null;
             }
+        }
+        this.set = function( key, value ) {
+            if ( !supported ) return this;
+
+            this.sound[ key ] = value;
+            return this;
+        }
+        this.get = function( key ) {
+            if ( !supported ) return null;
+
+            return key ? this.sound[ key ] : this.sound;
         }
         this.bind = function( types, func ) {
             if ( !supported ) return this;
@@ -406,7 +416,19 @@ var buzz = {
                 func.call( that );
             }
         }
-        
+        // privates
+        function timerangeToArray( timeRange ) {
+            var array = [],
+                length = timeRange.length - 1;        
+            
+            for( var i = 0; i <= length; i++ ) {
+                array.push({ 
+                    start: timeRange.start( length ), 
+                    end: timeRange.end( length )
+                });
+            }
+            return array; 
+        }
         // init
         if ( supported ) {
             for( var i in buzz.defaults ) {
