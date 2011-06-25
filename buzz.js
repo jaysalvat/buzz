@@ -28,12 +28,13 @@
 
 var buzz = {
     defaults: {
-        preload: 'metadata',
         autoplay: false,
+        fadeSpeed: 5000,
+        formats: [],
         loop: false,
         placeholder: '--',
-        fadeSpeed: 5000,
-        formats: []
+        preload: 'metadata',
+        volume: 100
     },
     sounds: [],
     sound: function( src, options ) {
