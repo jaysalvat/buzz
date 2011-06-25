@@ -428,17 +428,22 @@ var buzz = {
         }
     },
     group: function( sounds ) {
-        fn = function() {
-            var args = Array.prototype.slice.call( arguments ),
-                func = args.shift();
-
-            for( var i in sounds ) {
-                sounds[ i ][ func ].apply( sounds[ i ], args );
+        var sounds = argsToArray( sounds, arguments );
+        // publics
+        this.getSounds = function() {
+            return sounds;
+        }
+        this.add = function( soundArray ) {
+            var soundArray = argsToArray( soundArray, arguments );
+            for( var a in soundArray ) {
+                for( var i in sounds ) {
+                    sounds.push( soundArray[ a ] );
+                }
             }
         }
         this.remove = function( soundArray ) {
-            var soundArray = ( soundArray instanceof Array ) ? soundArray : arguments
-            for( var a in soundArray) {
+            var soundArray = argsToArray( soundArray, arguments );
+            for( var a in soundArray ) {
                 for( var i in sounds ) {
                     if ( sounds[ i ] == soundArray[ a ] ) {
                         delete sounds[ i ];
@@ -538,6 +543,18 @@ var buzz = {
         this.fadeOut = function( speed, callback ) {
             fn( 'fadeOut', speed, callback );
             return this;
+        }
+        // privates
+        function fn() {
+            var args = argsToArray( arguments ),
+                func = args.shift();
+                
+            for( var i in sounds ) {
+                sounds[ i ][ func ].apply( sounds[ i ], args );
+            }
+        }
+        function argsToArray( args, array ) {
+            return ( array instanceof Array ) ? array : Array.prototype.slice.call( args );
         }
     },
     all: function() {
