@@ -333,8 +333,7 @@ var buzz = {
 
             var delay = speed / Math.abs( from - to ),
                 that = this;
-            this.play();
-            that.setVolume( from );
+            this.play().setVolume( from );
             
             function doFade() {
                 setTimeout( function() {
@@ -352,40 +351,10 @@ var buzz = {
             doFade();
         }
         this.fadeIn = function( speed, callback ) {
-            speed = speed || buzz.defaults.fadeSpeed;
-            var delay = speed / 100,
-                that = this;
-            this.volume = 0;
-            this.play();
-            
-            function doFade() {
-                setTimeout( function() {
-                    if ( that.volume < 100 ) {
-                        that.setVolume( that.volume += 1 );
-                        doFade();
-                    } else if ( callback instanceof Function ) {
-                        callback.apply( that );
-                    }
-                }, delay );
-            }
-            doFade();
+            this.fade( 0, 100, speed, callback );
         }
         this.fadeOut = function( speed, callback ) {
-            speed = speed || buzz.defaults.fadeSpeed;
-            var delay = speed / this.volume,
-                that = this;
-
-            function doFade() {
-                setTimeout( function() {
-                    if ( that.volume > 0 ) {
-                        that.setVolume( that.volume -= 1 );
-                        doFade();
-                    } else if ( callback instanceof Function ) {
-                        callback.apply( that );
-                    }
-                }, delay );
-            }
-            doFade();
+            this.fade( this.volume, 0, speed, callback );
         }
         this.fadeWith = function( sound, speed ) {
             this.fadeOut( speed, function() {
