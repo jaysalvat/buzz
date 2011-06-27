@@ -29,7 +29,7 @@
 var buzz = {
     defaults: {
         autoplay: false,
-        fadeSpeed: 5000,
+        duration: 5000,
         formats: [],
         loop: false,
         placeholder: '--',
@@ -169,10 +169,10 @@ var buzz = {
 			var percent = Math.round( buzz.toPercent( this.sound.currentTime, this.sound.duration ) );
             return isNaN( percent ) ? buzz.defaults.placeholder : percent;
         }
-        this.setSpeed = function( speed ) {
-            this.sound.playbackRate = speed;
+        this.setduration = function( duration ) {
+            this.sound.playbackRate = duration;
         }
-        this.getSpeed = function() {
+        this.getduration = function() {
             return this.sound.playbackRate;
         }
         this.getDuration = function() {
@@ -324,16 +324,16 @@ var buzz = {
             }
             return this;
         }
-        this.fade = function( to, speed, callback ) {
-            if ( speed instanceof Function ) {
-                callback = speed;
-                speed = buzz.defaults.fadeSpeed;
+        this.fadeTo = function( to, duration, callback ) {
+            if ( duration instanceof Function ) {
+                callback = duration;
+                duration = buzz.defaults.fadeduration;
             } else {
-                speed = speed || buzz.defaults.fadeSpeed;
+                duration = duration || buzz.defaults.fadeduration;
             }
 
             var from = this.volume,
-				delay = speed / Math.abs( from - to ),
+				delay = duration / Math.abs( from - to ),
                 that = this;
             this.play();
             
@@ -352,18 +352,18 @@ var buzz = {
             }
             doFade();
         }
-        this.fadeIn = function( speed, callback ) {
-            this.setVolume(0).fade( 100, speed, callback );
+        this.fadeIn = function( duration, callback ) {
+            this.setVolume(0).fadeTo( 100, duration, callback );
         }
-        this.fadeOut = function( speed, callback ) {
-            this.fade( 0, speed, callback );
+        this.fadeOut = function( duration, callback ) {
+            this.fadeTo( 0, duration, callback );
         }
-        this.fadeWith = function( sound, speed ) {
-            this.fadeOut( speed, function() {
+        this.fadeWith = function( sound, duration ) {
+            this.fadeOut( duration, function() {
                 this.stop();
             });
             if ( sound instanceof buzz.sound ) {
-                sound.play().fadeIn( speed );
+                sound.play().fadeIn( duration );
             }
         }
         this.whenReady = function( func ) {
@@ -510,8 +510,8 @@ var buzz = {
             fn( 'setTime', time );
             return this;
         }
-        this.setSpeed = function( speed ) {
-            fn( 'setSpeed', speed );
+        this.setduration = function( duration ) {
+            fn( 'setduration', duration );
             return this;
         }
         this.set = function( key, value ) {
@@ -534,16 +534,16 @@ var buzz = {
             fn( 'trigger', type );
             return this;
         }
-        this.fade = function( from, to, speed, callback ) {
-            fn( 'fade', from, to, speed, callback );
+        this.fade = function( from, to, duration, callback ) {
+            fn( 'fade', from, to, duration, callback );
             return this;
         }
-        this.fadeIn = function( speed, callback ) {
-            fn( 'fadeIn', speed, callback );
+        this.fadeIn = function( duration, callback ) {
+            fn( 'fadeIn', duration, callback );
             return this;
         }
-        this.fadeOut = function( speed, callback ) {
-            fn( 'fadeOut', speed, callback );
+        this.fadeOut = function( duration, callback ) {
+            fn( 'fadeOut', duration, callback );
             return this;
         }
         // privates
