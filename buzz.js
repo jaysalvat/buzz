@@ -158,15 +158,15 @@ var buzz = {
             var time = Math.round( this.sound.currentTime * 100 ) / 100;
             return isNaN( time ) ? buzz.defaults.placeholder : time;
         }
-        this.setPercent = function( time ) {
+        this.setPercent = function( percent ) {
             if ( !supported ) return this;
 
-            return this.setTime( this.sound.duration * time / 100 );
+            return this.setTime( buzz.fromPercent( percent, this.sound.duration ) );
         }
         this.getPercent = function() {
             if ( !supported ) return null;
 
-            var percent = Math.round( ( this.sound.currentTime / this.sound.duration * 100 ) * 100 ) / 100;
+			var percent = Math.round( buzz.toPercent( this.sound.currentTime, this.sound.duration ) );
             return isNaN( percent ) ? buzz.defaults.placeholder : percent;
         }
         this.setSpeed = function( speed ) {
@@ -577,7 +577,7 @@ var buzz = {
     isAACSupported: function() {
         return !!this.el.canPlayType && ( this.el.canPlayType( 'audio/x-m4a;' ) || this.el.canPlayType( 'audio/aac;' ) );
     },
-    formatTime: function( time, withHours ) {
+    toTimer: function( time, withHours ) {
         h = Math.floor( time / 3600 );
         h = isNaN( h ) ? '--' : ( h >= 10 ) ? h : '0' + h;            
         m = withHours ? Math.floor( time / 60 % 60 ) : Math.floor( time / 60 );
@@ -586,7 +586,7 @@ var buzz = {
         s = isNaN( s ) ? '--' : ( time >= 10 ) ? s : '0' + s;
         return withHours ? h + ':' + m + ':' + s : m + ':' + s;
     },
-    unformatTime: function( time ) {
+    fromTimer: function( time ) {
         var splits = time.toString().split( ':' );
         if ( splits && splits.length == 3 ) {
             time = ( parseInt( splits[ 0 ] ) * 3600 ) + ( parseInt(splits[ 1 ] ) * 60 ) + parseInt( splits[ 2 ] );
@@ -595,5 +595,15 @@ var buzz = {
             time = ( parseInt( splits[ 0 ] ) * 60 ) + parseInt( splits[ 1 ] );
         }
         return time;
+    },
+    toPercent: function( value, total, decimal ) {
+		var r = Math.pow( 10, decimal || 0 );
+
+		return Math.round( ( ( value * 100 ) / total ) * r ) / r;
+    },
+    fromPercent: function( percent, total, decimal ) {
+		var r = Math.pow( 10, decimal || 0 );
+		
+        return  Math.round( ( ( total / 100 ) * percent ) * r ) / r;
     }
 }
