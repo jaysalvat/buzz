@@ -170,9 +170,13 @@ var buzz = {
             return isNaN( percent ) ? buzz.defaults.placeholder : percent;
         }
         this.setSpeed = function( duration ) {
+			if ( !supported ) return this;
+			
             this.sound.playbackRate = duration;
         }
         this.getSpeed = function() {
+			if ( !supported ) return null;
+			
             return this.sound.playbackRate;
         }
         this.getDuration = function() {
@@ -182,21 +186,29 @@ var buzz = {
             return isNaN( duration ) ? buzz.defaults.placeholder : duration;
         }
         this.getPlayed = function() {
+			if ( !supported ) return null;
+			
             return timerangeToArray( this.sound.played );
         }
         this.getBuffered = function() {
+			if ( !supported ) return null;
+			
             return timerangeToArray( this.sound.buffered );
         }
         this.getSeekable = function() {
+			if ( !supported ) return null;
+			
             return timerangeToArray( this.sound.seekable );
         }
         this.getErrorCode = function() {
-            if ( this.sound.error ) {
+            if ( supported && this.sound.error ) {
                 return this.sound.error.code;
             }
             return 0;
         }
         this.getErrorMessage = function() {
+			if ( !supported ) return null;
+			
             switch( this.getErrorCode() ) {
                 case 1: 
                     return 'MEDIA_ERR_ABORTED';
@@ -211,9 +223,13 @@ var buzz = {
             }
         }
         this.getStateCode = function() {
+			if ( !supported ) return null;
+			
             return this.sound.readyState;
         }
         this.getStateMessage = function() {
+			if ( !supported ) return null;
+			
             switch( this.getStateCode() ) {
                 case 0: 
                     return 'HAVE_NOTHING';
@@ -230,9 +246,13 @@ var buzz = {
             }
         }
         this.getNetworkStateCode = function() {
+			if ( !supported ) return null;
+			
             return this.sound.networkState;
         }
         this.getNetworkStateMessage = function() {
+			if ( !supported ) return null;
+			
             switch( this.getNetworkStateCode() ) {
                 case 0: 
                     return 'NETWORK_EMPTY';
@@ -325,6 +345,8 @@ var buzz = {
             return this;
         }
         this.fadeTo = function( to, duration, callback ) {
+			if ( !supported ) return this;
+			 
             if ( duration instanceof Function ) {
                 callback = duration;
                 duration = buzz.defaults.fadeduration;
@@ -351,20 +373,29 @@ var buzz = {
                 }, delay );
             }
             doFade();
+			
+			return this;
         }
         this.fadeIn = function( duration, callback ) {
-            this.setVolume(0).fadeTo( 100, duration, callback );
+			if ( !supported ) return this;
+			 
+            return this.setVolume(0).fadeTo( 100, duration, callback );
         }
         this.fadeOut = function( duration, callback ) {
-            this.fadeTo( 0, duration, callback );
+			if ( !supported ) return this;
+			 
+            return this.fadeTo( 0, duration, callback );
         }
         this.fadeWith = function( sound, duration ) {
+			if ( !supported ) return this;
+			 
             this.fadeOut( duration, function() {
                 this.stop();
             });
             if ( sound instanceof buzz.sound ) {
                 sound.play().fadeIn( duration );
             }
+			return this;
         }
         this.whenReady = function( func ) {
             var that = this;
