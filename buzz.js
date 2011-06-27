@@ -169,10 +169,10 @@ var buzz = {
 			var percent = Math.round( buzz.toPercent( this.sound.currentTime, this.sound.duration ) );
             return isNaN( percent ) ? buzz.defaults.placeholder : percent;
         }
-        this.setduration = function( duration ) {
+        this.setSpeed = function( duration ) {
             this.sound.playbackRate = duration;
         }
-        this.getduration = function() {
+        this.getSpeed = function() {
             return this.sound.playbackRate;
         }
         this.getDuration = function() {
