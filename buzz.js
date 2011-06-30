@@ -455,8 +455,8 @@ var buzz = {
             } else {
                 this.sound.preload = options.preload;
             }
-            this.volume = options.volume;
-
+            this.setVolume( options.volume );
+            
             buzz.sounds.push( this );
         }
     },
