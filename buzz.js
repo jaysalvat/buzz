@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // buzz - A HTML5 audio library 
 // v 1.0 alpha
-// Dual licensed under the MIT and GPL licenses.
+// Licensed under the MIT license.
 // http://buzz.jaysalvat.com/
 // ----------------------------------------------------------------------------
 // Copyright (C) 2011 Jay Salvat
