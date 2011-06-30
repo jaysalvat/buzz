@@ -462,6 +462,7 @@ var buzz = {
     },
     group: function( sounds ) {
         var sounds = argsToArray( sounds, arguments );
+
         // publics
         this.getSounds = function() {
             return sounds;
@@ -579,14 +580,14 @@ var buzz = {
         }
         // privates
         function fn() {
-            var args = argsToArray( arguments ),
+            var args = argsToArray( null, arguments ),
                 func = args.shift();
                 
             for( var i in sounds ) {
                 sounds[ i ][ func ].apply( sounds[ i ], args );
             }
         }
-        function argsToArray( args, array ) {
+        function argsToArray( array, args ) {
             return ( array instanceof Array ) ? array : Array.prototype.slice.call( args );
         }
     },
