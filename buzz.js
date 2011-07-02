@@ -349,9 +349,9 @@ var buzz = {
 			 
             if ( duration instanceof Function ) {
                 callback = duration;
-                duration = buzz.defaults.fadeduration;
+                duration = buzz.defaults.duration;
             } else {
-                duration = duration || buzz.defaults.fadeduration;
+                duration = duration || buzz.defaults.duration;
             }
 
             var from = this.volume,
