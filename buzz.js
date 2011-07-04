@@ -96,10 +96,12 @@ var buzz = {
                 this.currentTime = 0;
                 this.play();
             });
+            return this;
         }
         this.unloop = function() {
             this.sound.removeAttribute( 'loop');
             this.unbind( 'ended.buzzloop' );
+            return this;
         }
         this.mute = function() {
             if ( !supported ) return this;
