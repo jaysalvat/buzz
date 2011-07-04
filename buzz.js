@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
-// buzz - A HTML5 audio library 
-// v 1.0 alpha
+// Buzz, a Javascript HTML5 Audio library 
+// v 1.0.x beta
 // Licensed under the MIT license.
 // http://buzz.jaysalvat.com/
 // ----------------------------------------------------------------------------
