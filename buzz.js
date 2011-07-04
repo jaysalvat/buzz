@@ -374,7 +374,9 @@ var buzz = {
                     }
                 }, delay );
             }
-            doFade();
+            this.whenReady( function() {
+                doFade();       
+            });
 			
 			return this;
         }
