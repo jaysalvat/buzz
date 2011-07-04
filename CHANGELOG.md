@@ -1,4 +1,4 @@
-# Buzz, A Javascript HTML5 Audio library
+# Buzz, a Javascript HTML5 Audio library
 
 ## CHANGE LOG
 
