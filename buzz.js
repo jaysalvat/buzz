@@ -602,16 +602,16 @@ var buzz = {
     isSupported: function() {
         return !!this.el.canPlayType;
     },
-    isOGGSupported: function() {
+    isOGGSupported: function() {
         return !!this.el.canPlayType && this.el.canPlayType( 'audio/ogg; codecs="vorbis"' );
     },
-    isWAVSupported: function() {
+    isWAVSupported: function() {
         return !!this.el.canPlayType && this.el.canPlayType( 'audio/wav; codecs="1"' );
     },
-    isMP3Supported: function() {
+    isMP3Supported: function() {
         return !!this.el.canPlayType && this.el.canPlayType( 'audio/mpeg;' );
     },
-    isAACSupported: function() {
+    isAACSupported: function() {
         return !!this.el.canPlayType && ( this.el.canPlayType( 'audio/x-m4a;' ) || this.el.canPlayType( 'audio/aac;' ) );
     },
     toTimer: function( time, withHours ) {
