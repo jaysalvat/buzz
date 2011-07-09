@@ -34,7 +34,7 @@ var buzz = {
         loop: false,
         placeholder: '--',
         preload: 'metadata',
-        volume: 100
+        volume: 80
     },
     sounds: [],
     sound: function( src, options ) {
