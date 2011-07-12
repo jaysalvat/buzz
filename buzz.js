@@ -81,7 +81,7 @@ var buzz = {
         this.stop = function() {
             if ( !supported  ) return this;
             
-            this.setTime( 0 );
+            this.setTime( this.getDuration() );
             this.sound.pause();
             return this;
         }
@@ -99,7 +99,7 @@ var buzz = {
             return this;
         }
         this.unloop = function() {
-            this.sound.removeAttribute( 'loop');
+            this.sound.removeAttribute( 'loop' );
             this.unbind( 'ended.buzzloop' );
             return this;
         }
