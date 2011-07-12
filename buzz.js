@@ -331,16 +331,18 @@ var buzz = {
         }
         this.trigger = function( types ) {
             if ( !supported ) return this;
-
+        
             var types = types.split( ' ' );
                         
             for( var t in types ) {
                 var idx = types[ t ];
-
+        
                 for( var i in events ) {
-                    var namespace = events[ i ].idx.split( '.' );
-                    if ( events[ i ].idx == idx || ( namespace[ 0 ] && namespace[ 0 ] == idx.replace( '.', '' ) ) ) {
-					    events[ i ].func.apply( this );
+                    var eventType = events[ i ].idx.split( '.' );
+                    if ( events[ i ].idx == idx || ( eventType[ 0 ] && eventType[ 0 ] == idx.replace( '.', '' ) ) ) {
+                        var evt = document.createEvent('HTMLEvents');
+                        evt.initEvent( eventType[ 0 ], false, true );
+                        this.sound.dispatchEvent( evt );
                     }   
                 }
             }
