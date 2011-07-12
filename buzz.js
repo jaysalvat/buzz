@@ -100,6 +100,8 @@ var buzz = {
         }
         
         this.loop = function() {
+            if ( !supported ) return this;
+            
             this.sound.loop = 'loop';
             this.bind( 'ended.buzzloop', function() {
                 this.currentTime = 0;
@@ -109,6 +111,8 @@ var buzz = {
         }
         
         this.unloop = function() {
+            if ( !supported ) return this;
+            
             this.sound.removeAttribute( 'loop' );
             this.unbind( 'ended.buzzloop' );
             return this;
@@ -441,13 +445,15 @@ var buzz = {
             this.fadeOut( duration, function() {
                 this.stop();
             });
-            if ( sound instanceof buzz.sound ) {
-                sound.play().fadeIn( duration );
-            }
+
+            sound.play().fadeIn( duration );
+
 			return this;
         }
         
         this.whenReady = function( func ) {
+            if ( !supported ) return null;
+            
             var that = this;
             if ( this.sound.readyState == 0 ) {
                 this.bind( 'canplay.buzzwhenready', function() {
@@ -479,6 +485,7 @@ var buzz = {
             }
 
             this.sound = document.createElement( 'audio' );
+            
             if ( src instanceof Array ) {
                 for( var i in src ) {
                     var source = document.createElement( 'source' );
