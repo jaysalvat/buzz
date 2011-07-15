@@ -713,7 +713,7 @@ var buzz = {
         m = withHours ? Math.floor( time / 60 % 60 ) : Math.floor( time / 60 );
         m = isNaN( m ) ? '--' : ( m >= 10 ) ? m : '0' + m;
         s = Math.floor( time % 60 );
-        s = isNaN( s ) ? '--' : ( time >= 10 ) ? s : '0' + s;
+        s = isNaN( s ) ? '--' : ( s >= 10 ) ? s : '0' + s;
         return withHours ? h + ':' + m + ':' + s : m + ':' + s;
     },
     
