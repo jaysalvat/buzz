@@ -36,6 +36,13 @@ var buzz = {
         preload: 'metadata',
         volume: 80
     },
+    types: {
+        'mp3': 'audio/mpeg',
+        'ogg': 'audio/ogg',
+        'wav': 'audio/wav',
+        'aac': 'audio/aac',
+        'm4a': 'audio/x-m4a'
+    },
     sounds: [],
     el: document.createElement( 'audio' ),
     
@@ -477,6 +484,19 @@ var buzz = {
             }
             return array; 
         }
+
+        function getExt( filename ) {
+            return filename.split('.').pop();
+        }
+        
+        function addSource( sound, src ) {
+            var source = document.createElement( 'source' );
+            source.src = src;
+            if ( buzz.types[ getExt( src ) ] ) {
+                source.type = buzz.types[ getExt( src ) ];
+            }
+            sound.appendChild( source );
+        }
         
         // init
         if ( supported ) {
@@ -488,18 +508,14 @@ var buzz = {
             
             if ( src instanceof Array ) {
                 for( var i in src ) {
-                    var source = document.createElement( 'source' );
-                    source.src = src[ i ];
-                    this.sound.appendChild( source );
+                    addSource( this.sound, src[ i ] );
                 }
             } else if ( options.formats.length ) {
                 for( var i in options.formats ) {
-                    var source = document.createElement( 'source' );
-                    source.src = src + '.' + options.formats[ i ];
-                    this.sound.appendChild( source );     
+                    addSource( this.sound, src + '.' + options.formats[ i ] );
                 }
             } else {
-                this.sound.src = src;
+                addSource( this.sound, src );
             }
             
             if ( options.loop ) {
