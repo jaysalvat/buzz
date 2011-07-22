@@ -479,8 +479,9 @@ var buzz = {
         }
 
         // init
-        if ( supported ) {
-            for( var i = 0; i < buzz.defaults.length; i++ ) {
+        if ( supported ) {		
+			
+            for( i in buzz.defaults ) {
                 options[ i ] = options[ i ] || buzz.defaults[ i ];
             }
 
