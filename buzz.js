@@ -705,23 +705,23 @@ var buzz = {
     },
 
     isSupported: function() {
-        return !!this.el.canPlayType;
+        return !!buzz.el.canPlayType;
     },
 
     isOGGSupported: function() {
-        return !!this.el.canPlayType && this.el.canPlayType( 'audio/ogg; codecs="vorbis"' );
+        return !!buzz.el.canPlayType && buzz.el.canPlayType( 'audio/ogg; codecs="vorbis"' );
     },
 
     isWAVSupported: function() {
-        return !!this.el.canPlayType && this.el.canPlayType( 'audio/wav; codecs="1"' );
+        return !!buzz.el.canPlayType && buzz.el.canPlayType( 'audio/wav; codecs="1"' );
     },
 
     isMP3Supported: function() {
-        return !!this.el.canPlayType && this.el.canPlayType( 'audio/mpeg;' );
+        return !!buzz.el.canPlayType && buzz.el.canPlayType( 'audio/mpeg;' );
     },
 
     isAACSupported: function() {
-        return !!this.el.canPlayType && ( this.el.canPlayType( 'audio/x-m4a;' ) || this.el.canPlayType( 'audio/aac;' ) );
+        return !!buzz.el.canPlayType && ( buzz.el.canPlayType( 'audio/x-m4a;' ) || buzz.el.canPlayType( 'audio/aac;' ) );
     },
 
     toTimer: function( time, withHours ) {
