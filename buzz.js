@@ -350,7 +350,7 @@ var buzz = {
             var types = types.split( ' ' );
 
             for( var t = 0; t < types.length; t++ ) {
-                var idx = types[ t ];
+                var idx = types[ t ],
 				    type = idx.split( '.' )[ 0 ];
 
                 for( var i = 0; i < events.length; i++ ) {
@@ -725,6 +725,7 @@ var buzz = {
     },
 
     toTimer: function( time, withHours ) {
+        var h, m, s;
         h = Math.floor( time / 3600 );
         h = isNaN( h ) ? '--' : ( h >= 10 ) ? h : '0' + h;
         m = withHours ? Math.floor( time / 60 % 60 ) : Math.floor( time / 60 );
