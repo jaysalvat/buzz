@@ -552,9 +552,7 @@ var buzz = {
         this.add = function( soundArray ) {
             var soundArray = argsToArray( soundArray, arguments );
             for( var a = 0; a < soundArray.length; a++ ) {
-                for( var i = 0; i < sounds.length; i++ ) {
-                    sounds.push( soundArray[ a ] );
-                }
+                sounds.push( soundArray[ a ] );
             }
         }
 
