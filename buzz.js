@@ -601,11 +601,15 @@ var buzz = {
 
             if ( src instanceof Array ) {
                 for( var j in src ) {
+                  if(src.hasOwnProperty(j)) {
                     addSource( this.sound, src[ j ] );
+                  }
                 }
             } else if ( options.formats.length ) {
                 for( var k in options.formats ) {
+                  if(options.formats.hasOwnProperty(k)) {
                     addSource( this.sound, src + '.' + options.formats[ k ] );
+                  }
                 }
             } else {
                 addSource( this.sound, src );
