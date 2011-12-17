@@ -2,6 +2,14 @@
 
 ## CHANGE LOG
 
+### Buzz 1.0.5 2011-12-17
+
+* Filtering unwanted properties to avoid weird sources in Firefox and IE
+* Fixed JShint warnings
+* In static function only access other static members in a static manner
+* Define local variables, so they do not become global
+* fix adding sounds to group
+
 ### Buzz 1.0.4 2011-08-04
 
 * Add types
