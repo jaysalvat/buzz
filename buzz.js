@@ -350,7 +350,7 @@ var buzz = {
             var types = types.split( ' ' );
 
             for( var t = 0; t < types.length; t++ ) {
-                var idx = types[ t ];
+                var idx = types[ t ],
 				    type = idx.split( '.' )[ 0 ];
 
                 for( var i = 0; i < events.length; i++ ) {
@@ -552,9 +552,7 @@ var buzz = {
         this.add = function( soundArray ) {
             var soundArray = argsToArray( soundArray, arguments );
             for( var a = 0; a < soundArray.length; a++ ) {
-                for( var i = 0; i < sounds.length; i++ ) {
-                    sounds.push( soundArray[ a ] );
-                }
+                sounds.push( soundArray[ a ] );
             }
         }
 
@@ -705,26 +703,27 @@ var buzz = {
     },
 
     isSupported: function() {
-        return !!this.el.canPlayType;
+        return !!buzz.el.canPlayType;
     },
 
     isOGGSupported: function() {
-        return !!this.el.canPlayType && this.el.canPlayType( 'audio/ogg; codecs="vorbis"' );
+        return !!buzz.el.canPlayType && buzz.el.canPlayType( 'audio/ogg; codecs="vorbis"' );
     },
 
     isWAVSupported: function() {
-        return !!this.el.canPlayType && this.el.canPlayType( 'audio/wav; codecs="1"' );
+        return !!buzz.el.canPlayType && buzz.el.canPlayType( 'audio/wav; codecs="1"' );
     },
 
     isMP3Supported: function() {
-        return !!this.el.canPlayType && this.el.canPlayType( 'audio/mpeg;' );
+        return !!buzz.el.canPlayType && buzz.el.canPlayType( 'audio/mpeg;' );
     },
 
     isAACSupported: function() {
-        return !!this.el.canPlayType && ( this.el.canPlayType( 'audio/x-m4a;' ) || this.el.canPlayType( 'audio/aac;' ) );
+        return !!buzz.el.canPlayType && ( buzz.el.canPlayType( 'audio/x-m4a;' ) || buzz.el.canPlayType( 'audio/aac;' ) );
     },
 
     toTimer: function( time, withHours ) {
+        var h, m, s;
         h = Math.floor( time / 3600 );
         h = isNaN( h ) ? '--' : ( h >= 10 ) ? h : '0' + h;
         m = withHours ? Math.floor( time / 60 % 60 ) : Math.floor( time / 60 );
