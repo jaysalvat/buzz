@@ -590,7 +590,7 @@ var buzz = {
         }
 
         // init
-        if ( supported ) {
+        if ( supported && src ) {
           
             for(var i in buzz.defaults ) {
               if(buzz.defaults.hasOwnProperty(i)) {
