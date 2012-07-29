@@ -34,7 +34,8 @@ var buzz = {
         loop: false,
         placeholder: '--',
         preload: 'metadata',
-        volume: 80
+        volume: 80,
+        delay: 0
     },
     types: {
         'mp3': 'audio/mpeg',
@@ -64,12 +65,17 @@ var buzz = {
             return this;
         };
 
-        this.play = function() {
+        this.play = function(delay) {
             if ( !supported ) {
               return this;
             }
 
-            this.sound.play();
+            if (typeof(delay) == "undefined") {
+                delay = options.delay;
+            }
+
+            that = this
+            setTimeout(function() { that.sound.play() }, delay);
             return this;
         };
 
