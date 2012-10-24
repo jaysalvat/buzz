@@ -108,7 +108,7 @@ var buzz = {
               return this;
             }
 
-            this.setTime( this.getDuration() );
+            this.setTime( 0 );
             this.sound.pause();
             return this;
         };
