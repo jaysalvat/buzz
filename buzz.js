@@ -449,12 +449,12 @@ var buzz = {
             var that = this;
 
             eventsOnce[ pid++ ] = false;
-            this.bind( pid + type, function() {
+            this.bind( type + '.' + pid, function() {
                if ( !eventsOnce[ pid ] ) {
                    eventsOnce[ pid ] = true;
                    func.call( that );
                }
-               that.unbind( pid + type );
+               that.unbind( type + '.' + pid );
             });
         };
 
