@@ -735,11 +735,6 @@ var buzz = {
             return this;
         };
 
-        this.setduration = function( duration ) {
-            fn( 'setduration', duration );
-            return this;
-        };
-
         this.set = function( key, value ) {
             fn( 'set', key, value );
             return this;
