@@ -658,7 +658,7 @@ var buzz = {
             for( var a = 0; a < soundArray.length; a++ ) {
                 for( var i = 0; i < sounds.length; i++ ) {
                     if ( sounds[ i ] == soundArray[ a ] ) {
-                        delete sounds[ i ];
+                        sounds.splice(i, 1);
                         break;
                     }
                 }
