@@ -48,7 +48,9 @@ var buzz = {
 
     sound: function( src, options ) {
         options = options || {};
-
+		this.src = src;
+		this.options = options;
+		
         var pid = 0,
             events = [],
             eventsOnce = {},
