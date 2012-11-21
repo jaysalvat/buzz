@@ -25,7 +25,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // ----------------------------------------------------------------------------
-
+//
+// multi-channel support Addition by Alaa-eddine KADDOURI
+// 
+// 
+// Usage : 
+//    var mySound = new buzz.sound( 
+//		"music", {
+//		  formats: [ "ogg", "mp3" ],
+//		  channels : 4
+//		});
+//
+//    mySound.play(); //will use channel 0
+//	  setTimeout(function() {
+//			mySound.play(); //will use channel 1 if channel 0 still playing
+//	  }, 3000);
+//
+//
 var buzz = {
     defaults: {
         autoplay: false,
@@ -48,8 +64,9 @@ var buzz = {
 
     sound: function( src, options ) {
         options = options || {};
-		this.src = src;
-		this.options = options;
+
+		var _pool = [];
+		var _instance = this;
 		
         var pid = 0,
             events = [],
@@ -58,7 +75,8 @@ var buzz = {
 
         // publics
         this.load = function() {
-            if ( !supported ) {
+			
+            if ( !supported || poolfn( 'load' )) {
               return this;
             }
 
@@ -70,13 +88,22 @@ var buzz = {
             if ( !supported ) {
               return this;
             }
-
+			
+			//multi-channel support ---------------------//
+			if (this.isPool)
+			{
+				var snd = getChannel();
+				if (!snd) return;
+				this.sound = snd.sound;
+			}
+			//-------------------------------------------//
+			
             this.sound.play();
             return this;
         };
 
         this.togglePlay = function() {
-            if ( !supported ) {
+            if ( !supported || poolfn( 'togglePlay' )) {
               return this;
             }
 
@@ -89,7 +116,7 @@ var buzz = {
         };
 
         this.pause = function() {
-            if ( !supported ) {
+            if ( !supported || poolfn( 'pause' )) {
               return this;
             }
 
@@ -106,7 +133,7 @@ var buzz = {
         };
 
         this.stop = function() {
-            if ( !supported  ) {
+            if ( !supported  || poolfn( 'stop' )) {
               return this;
             }
 
@@ -124,7 +151,7 @@ var buzz = {
         };
 
         this.loop = function() {
-            if ( !supported ) {
+            if ( !supported || poolfn( 'loop' )) {
               return this;
             }
 
@@ -137,7 +164,7 @@ var buzz = {
         };
 
         this.unloop = function() {
-            if ( !supported ) {
+            if ( !supported || poolfn( 'unloop' )) {
               return this;
             }
 
@@ -147,7 +174,7 @@ var buzz = {
         };
 
         this.mute = function() {
-            if ( !supported ) {
+            if ( !supported || poolfn( 'mute' )) {
               return this;
             }
 
@@ -156,7 +183,7 @@ var buzz = {
         };
 
         this.unmute = function() {
-            if ( !supported ) {
+            if ( !supported || poolfn( 'unmute' )) {
               return this;
             }
 
@@ -165,7 +192,7 @@ var buzz = {
         };
 
         this.toggleMute = function() {
-            if ( !supported ) {
+            if ( !supported || poolfn( 'toggleMute' )) {
               return this;
             }
 
@@ -182,7 +209,7 @@ var buzz = {
         };
 
         this.setVolume = function( volume ) {
-            if ( !supported ) {
+            if ( !supported || poolfn( 'setVolume', volume)) {
               return this;
             }
 
@@ -206,7 +233,7 @@ var buzz = {
             return this.volume;
         };
 
-        this.increaseVolume = function( value ) {
+        this.increaseVolume = function( value ) {			
             return this.setVolume( this.volume + ( value || 1 ) );
         };
 
@@ -215,7 +242,7 @@ var buzz = {
         };
 
         this.setTime = function( time ) {
-            if ( !supported ) {
+            if ( !supported || poolfn( 'setTime', time )) {
               return this;
             }
 
@@ -383,7 +410,7 @@ var buzz = {
         };
 
         this.set = function( key, value ) {
-            if ( !supported ) {
+            if ( !supported || poolfn( 'set', key, value )) {
               return this;
             }
 
@@ -400,7 +427,7 @@ var buzz = {
         };
 
         this.bind = function( types, func ) {
-            if ( !supported ) {
+            if ( !supported || poolfn( 'bind', type, func )) {
               return this;
             }
 
@@ -421,7 +448,7 @@ var buzz = {
         };
 
         this.unbind = function( types ) {
-            if ( !supported ) {
+            if ( !supported || poolfn( 'unbind', type )) {
               return this;
             }
 
@@ -444,7 +471,7 @@ var buzz = {
         };
 
         this.bindOnce = function( type, func ) {
-            if ( !supported ) {
+            if ( !supported || poolfn( 'bindOnce', type, func )) {
               return this;
             }
 
@@ -461,7 +488,7 @@ var buzz = {
         };
 
         this.trigger = function( types ) {
-            if ( !supported ) {
+            if ( !supported || poolfn( 'trigger', type )) {
               return this;
             }
 
@@ -519,8 +546,9 @@ var buzz = {
             return this;
         };
 
+
         this.fadeIn = function( duration, callback ) {
-            if ( !supported ) {
+            if ( !supported || poolfn( 'fadeIn', duration, callback )) {
               return this;
             }
 
@@ -528,7 +556,7 @@ var buzz = {
         };
 
         this.fadeOut = function( duration, callback ) {
-			if ( !supported ) {
+			if ( !supported || poolfn( 'fadeOut', duration, callback )) {
               return this;
             }
 
@@ -591,6 +619,38 @@ var buzz = {
             sound.appendChild( source );
         }
 
+		
+		//multi-channel support --------------------------//
+        function poolfn() {
+			if (!_instance.isPool) return false;
+			
+            var args = argsToArray( null, arguments ),
+                func = args.shift();
+
+			
+            for( var i = 0; i < _pool.length; i++ ) {
+                _pool[ i ][ func ].apply( _pool[ i ], args );
+            }
+			
+			return true;
+        }
+
+        function argsToArray( array, args ) {
+            return ( array instanceof Array ) ? array : Array.prototype.slice.call( args );
+        }
+		
+		//look for available channel
+		function getChannel()
+		{
+			for (var i =0; i<_pool.length; i++)
+			{
+				if (_pool[i].isEnded() || _pool[i].isPaused()) 
+					return _pool[i];
+			}		
+			return false;
+		}
+		//-----------------------------------------------------//
+		
         // init
         if ( supported && src ) {
           
@@ -599,8 +659,25 @@ var buzz = {
                 options[ i ] = options[ i ] || buzz.defaults[ i ];
               }
             }
-
+			
+			// multi-channel support -------------------//			
+			if (options.channels > 1) //pool or simple sound instance ?
+			{
+				this.isPool = true;
+				var poolsCount = options.channels;
+				for (var i=0; i<poolsCount; i++) 
+				{
+					options.channels = 0;
+					_pool.push(new buzz.sound(src, options));	//clone original sound but only initialize one channel per clone
+				}
+				
+				return;
+			}
+			
+			//-----------------------------------------// 	
+			
             this.sound = document.createElement( 'audio' );
+			
 
             if ( src instanceof Array ) {
                 for( var j in src ) {
