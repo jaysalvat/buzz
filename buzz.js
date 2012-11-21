@@ -621,24 +621,24 @@ var buzz = {
 
 		
 		//multi-channel support --------------------------//
-        function poolfn() {
+		function poolfn() {
 			if (!_instance.isPool) return false;
 			
-            var args = argsToArray( null, arguments ),
-                func = args.shift();
+			var args = argsToArray( null, arguments ),
+				func = args.shift();
 
 			
-            for( var i = 0; i < _pool.length; i++ ) {
-                _pool[ i ][ func ].apply( _pool[ i ], args );
-            }
+			for( var i = 0; i < _pool.length; i++ ) {
+				_pool[ i ][ func ].apply( _pool[ i ], args );
+			}
 			
 			return true;
-        }
+		}
 
-        function argsToArray( array, args ) {
-            return ( array instanceof Array ) ? array : Array.prototype.slice.call( args );
-        }
-		
+		function argsToArray( array, args ) {
+			return ( array instanceof Array ) ? array : Array.prototype.slice.call( args );
+		}
+
 		//look for available channel
 		function getChannel()
 		{
@@ -673,7 +673,7 @@ var buzz = {
 				
 				return;
 			}
-			
+
 			//-----------------------------------------// 	
 			
             this.sound = document.createElement( 'audio' );
