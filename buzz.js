@@ -427,7 +427,7 @@ var buzz = {
         };
 
         this.bind = function( types, func ) {
-            if ( !supported || poolfn( 'bind', type, func )) {
+            if ( !supported || poolfn( 'bind', types, func )) {
               return this;
             }
 
@@ -448,7 +448,7 @@ var buzz = {
         };
 
         this.unbind = function( types ) {
-            if ( !supported || poolfn( 'unbind', type )) {
+            if ( !supported || poolfn( 'unbind', types )) {
               return this;
             }
 
@@ -488,7 +488,7 @@ var buzz = {
         };
 
         this.trigger = function( types ) {
-            if ( !supported || poolfn( 'trigger', type )) {
+            if ( !supported || poolfn( 'trigger', types )) {
               return this;
             }
 
