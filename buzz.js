@@ -252,11 +252,22 @@ var buzz = {
             return this;
         };
 
-        this.getTime = function() {
-            if ( !supported ) {
+        this.getTime = function(channelIdx) {
+            if ( !supported) {
               return null;
             }
-
+			if (channelIdx !== undefined && this.isPool)
+			{
+				var channel = getChannel(channelIdx);
+				
+				if (channel && channel.sound)
+				{
+					var time = Math.round( channel.sound.currentTime * 100 ) / 100;
+					return isNaN( time ) ? buzz.defaults.placeholder : time;
+				}
+				
+			}
+			
             var time = Math.round( this.sound.currentTime * 100 ) / 100;
             return isNaN( time ) ? buzz.defaults.placeholder : time;
         };
@@ -640,8 +651,10 @@ var buzz = {
 		}
 
 		//look for available channel
-		function getChannel()
+		function getChannel(channelIdx)
 		{
+			if (channelIdx !== undefined) return _pool[channelIdx];
+			
 			for (var i =0; i<_pool.length; i++)
 			{
 				if (_pool[i].isEnded() || _pool[i].isPaused()) 
@@ -670,10 +683,12 @@ var buzz = {
 					options.channels = 0;
 					_pool.push(new buzz.sound(src, options));	//clone original sound but only initialize one channel per clone
 				}
+				//init first channel
+				this.sound = _pool[0].sound;			
 				
 				return;
 			}
-
+			
 			//-----------------------------------------// 	
 			
             this.sound = document.createElement( 'audio' );
