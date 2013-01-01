@@ -36,6 +36,11 @@ var buzz = {
         preload: 'metadata',
         volume: 80
     },
+    validPlaybackModes: [
+        'blend',
+        'chain',
+        'random'
+    ],
     types: {
         'mp3': 'audio/mpeg',
         'ogg': 'audio/ogg',
@@ -641,7 +646,13 @@ var buzz = {
     group: function( sounds ) {
         sounds = argsToArray( sounds, arguments );
 
+        var playbackMode = 'blend';
+
         // publics
+        this.getPlaybackMode = function() {
+            return playbackMode;
+        };
+
         this.getSounds = function() {
             return sounds;
         };
@@ -671,7 +682,9 @@ var buzz = {
         };
 
         this.play = function() {
-            fn( 'play' );
+            fn( 'play', {
+                mode: playbackMode
+            } );
             return this;
         };
 
@@ -682,6 +695,13 @@ var buzz = {
 
         this.pause = function( time ) {
             fn( 'pause', time );
+            return this;
+        };
+
+        this.setPlaybackMode = function( mode ) {
+            if(buzz.validPlaybackModes.indexOf(mode) != -1) {
+                playbackMode = mode;
+            }
             return this;
         };
 
@@ -778,8 +798,26 @@ var buzz = {
         // privates
         function fn() {
             var args = argsToArray( null, arguments ),
-                func = args.shift();
+                func = args.shift(),
+                opt = args.shift();
 
+            if ( opt && typeof opt.mode === 'string' ) {
+                if ( opt.mode === 'random' ) {
+                    var rnd = Math.floor( Math.random() * sounds.length );
+                    sounds[ rnd ][ func ].apply( sounds[ rnd ], args );
+                    return;
+                }
+                else if ( opt.mode === 'chain' ) {
+                    var i = 0;
+                    var handler = function(e) {
+                        if ( ++i < sounds.length ) {
+                            sounds[ i ][ func ].apply( sounds[ i ], args ).bindOnce('ended', handler);
+                        }
+                    };
+                    sounds[ 0 ][ func ].apply( sounds[ 0 ], args ).bindOnce( 'ended', handler);
+                    return;
+                }
+            }
             for( var i = 0; i < sounds.length; i++ ) {
                 sounds[ i ][ func ].apply( sounds[ i ], args );
             }
