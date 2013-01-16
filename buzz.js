@@ -108,7 +108,7 @@ var buzz = {
               return this;
             }
 
-            this.setTime( this.getDuration() );
+            this.setTime( 0 );
             this.sound.pause();
             return this;
         };
@@ -433,7 +433,8 @@ var buzz = {
                     var namespace = events[ i ].idx.split( '.' );
                     if ( events[ i ].idx == idx || ( namespace[ 1 ] && namespace[ 1 ] == idx.replace( '.', '' ) ) ) {
                         this.sound.removeEventListener( type, events[ i ].func, true );
-                        delete events[ i ];
+                        // remove event
+                        events.splice(i, 1);
                     }
                 }
             }
@@ -448,12 +449,12 @@ var buzz = {
             var that = this;
 
             eventsOnce[ pid++ ] = false;
-            this.bind( pid + type, function() {
+            this.bind( type + '.' + pid, function() {
                if ( !eventsOnce[ pid ] ) {
                    eventsOnce[ pid ] = true;
                    func.call( that );
                }
-               that.unbind( pid + type );
+               that.unbind( type + '.' + pid );
             });
         };
 
@@ -589,7 +590,7 @@ var buzz = {
         }
 
         // init
-        if ( supported ) {
+        if ( supported && src ) {
           
             for(var i in buzz.defaults ) {
               if(buzz.defaults.hasOwnProperty(i)) {
@@ -657,7 +658,7 @@ var buzz = {
             for( var a = 0; a < soundArray.length; a++ ) {
                 for( var i = 0; i < sounds.length; i++ ) {
                     if ( sounds[ i ] == soundArray[ a ] ) {
-                        delete sounds[ i ];
+                        sounds.splice(i, 1);
                         break;
                     }
                 }
@@ -731,11 +732,6 @@ var buzz = {
 
         this.setTime = function( time ) {
             fn( 'setTime', time );
-            return this;
-        };
-
-        this.setduration = function( duration ) {
-            fn( 'setduration', duration );
             return this;
         };
 
