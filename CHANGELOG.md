@@ -2,6 +2,15 @@
 
 ## CHANGE LOG
 
+### Buzz 1.0.6 2013-01-16
+
+* Fix the bindOnce bug
+* Fix the Stop/play bug
+* Fix the unbind bug
+* Replace delete by splice for removing a sound from a group
+* Remove group.setDuration method. This method didn't exist
+* It's now possible to write a class extending buzz.sound
+
 ### Buzz 1.0.5 2011-12-17
 
 * Filtering unwanted properties to avoid weird sources in Firefox and IE
