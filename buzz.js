@@ -255,6 +255,7 @@ var buzz = {
             }
 
             this.sound.playbackRate = duration;
+            return this;
         };
 
         this.getSpeed = function() {
@@ -456,6 +457,8 @@ var buzz = {
                }
                that.unbind( type + '.' + pid );
             });
+            
+            return this;
         };
 
         this.trigger = function( types ) {
