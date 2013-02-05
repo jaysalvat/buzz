@@ -32,7 +32,7 @@
     } else if (typeof context.define === 'function' && context.define.amd) {
         define(name, [], factory);
     } else {
-        context[name] = factory;
+        context[name] = factory();
     }
 })('buzz', this, function(){
 
