@@ -26,6 +26,16 @@
 // THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
+(function(name, context, factory){
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = factory();
+    } else if (typeof context.define === 'function' && context.define.amd) {
+        define(name, [], factory);
+    } else {
+        context[name] = factory;
+    }
+})('buzz', this, function(){
+
 var buzz = {
     defaults: {
         autoplay: false,
@@ -850,3 +860,7 @@ var buzz = {
         return  Math.round( ( ( total / 100 ) * percent ) * r ) / r;
     }
 };
+
+return buzz;
+
+});
