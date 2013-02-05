@@ -49,6 +49,8 @@ var buzz = {
     sound: function( src, options ) {
         options = options || {};
 
+        var doc = options.document || document;
+
         var pid = 0,
             events = [],
             eventsOnce = {},
@@ -471,7 +473,7 @@ var buzz = {
                 for( var i = 0; i < events.length; i++ ) {
                     var eventType = events[ i ].idx.split( '.' );
                     if ( events[ i ].idx == idx || ( eventType[ 0 ] && eventType[ 0 ] == idx.replace( '.', '' ) ) ) {
-                        var evt = document.createEvent('HTMLEvents');
+                        var evt = doc.createEvent('HTMLEvents');
                         evt.initEvent( eventType[ 0 ], false, true );
                         this.sound.dispatchEvent( evt );
                     }
@@ -581,7 +583,7 @@ var buzz = {
         }
         
         function addSource( sound, src ) {
-            var source = document.createElement( 'source' );
+            var source = doc.createElement( 'source' );
             source.src = src;
             if ( buzz.types[ getExt( src ) ] ) {
                 source.type = buzz.types[ getExt( src ) ];
@@ -598,7 +600,7 @@ var buzz = {
               }
             }
 
-            this.sound = document.createElement( 'audio' );
+            this.sound = doc.createElement( 'audio' );
 
             if ( src instanceof Array ) {
                 for( var j in src ) {
