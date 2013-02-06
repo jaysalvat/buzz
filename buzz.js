@@ -44,7 +44,8 @@
             loop: false,
             placeholder: '--',
             preload: 'metadata',
-            volume: 80
+            volume: 80,
+            document: document // iframe support
         },
         types: {
             'mp3': 'audio/mpeg',
@@ -59,7 +60,7 @@
         sound: function (src, options) {
             options = options || {};
 
-            var doc = options.document || document;
+            var doc = options.document || buzz.defaults.document;
 
             var pid = 0,
                 events = [],
@@ -299,7 +300,7 @@
                 }
 
                 var duration = Math.round(this.sound.duration * 100) / 100;
-                
+
                 return isNaN(duration) ? buzz.defaults.placeholder : duration;
             };
 
@@ -508,7 +509,9 @@
 
                         if (events[i].idx == idx || (eventType[0] && eventType[0] == idx.replace('.', ''))) {
                             var evt = doc.createEvent('HTMLEvents');
+
                             evt.initEvent(eventType[0], false, true);
+
                             this.sound.dispatchEvent(evt);
                         }
                     }
@@ -625,6 +628,7 @@
                 var source = doc.createElement('source');
 
                 source.src = src;
+                
                 if (buzz.types[getExt(src)]) {
                     source.type = buzz.types[getExt(src)];
                 }
