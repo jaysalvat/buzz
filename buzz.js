@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
 // Buzz, a Javascript HTML5 Audio library
-// v 1.0.x beta
+// v 1.0.6
 // Licensed under the MIT license.
 // http://buzz.jaysalvat.com/
 // ----------------------------------------------------------------------------
-// Copyright (C) 2011 Jay Salvat
+// Copyright (C) 2013 Jay Salvat
 // http://jaysalvat.com/
 // ----------------------------------------------------------------------------
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -267,6 +267,7 @@ var buzz = {
             }
 
             this.sound.playbackRate = duration;
+            return this;
         };
 
         this.getSpeed = function() {
@@ -468,6 +469,8 @@ var buzz = {
                }
                that.unbind( type + '.' + pid );
             });
+            
+            return this;
         };
 
         this.trigger = function( types ) {
