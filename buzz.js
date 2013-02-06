@@ -584,8 +584,8 @@ var buzz = {
 
             for( var i = 0; i <= length; i++ ) {
                 array.push({
-                    start: timeRange.start( length ),
-                    end: timeRange.end( length )
+                    start: timeRange.start( i ),
+                    end: timeRange.end( i )
                 });
             }
             return array;
