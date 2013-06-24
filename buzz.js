@@ -213,13 +213,13 @@
                 if (volume > 100) {
                     volume = 100;
                 }
-              
+
                 this.volume = volume;
                 this.sound.volume = volume / 100;
 
                 return this;
             };
-          
+
             this.getVolume = function () {
                 if (!supported) {
                     return this;
@@ -241,8 +241,12 @@
                     return this;
                 }
 
+                var set = true;
                 this.whenReady(function () {
-                    this.sound.currentTime = time;
+                    if (set === true) {
+                        set = false;
+                        this.sound.currentTime = time;
+                   }
                 });
 
                 return this;
@@ -282,7 +286,7 @@
                 }
 
                 this.sound.playbackRate = duration;
-                
+
                 return this;
             };
 
@@ -623,12 +627,12 @@
             function getExt(filename) {
                 return filename.split('.').pop();
             }
-            
+
             function addSource(sound, src) {
                 var source = doc.createElement('source');
 
                 source.src = src;
-                
+
                 if (buzz.types[getExt(src)]) {
                     source.type = buzz.types[getExt(src)];
                 }
@@ -638,7 +642,7 @@
 
             // init
             if (supported && src) {
-              
+
                 for (var i in buzz.defaults) {
                     if (buzz.defaults.hasOwnProperty(i)) {
                         options[i] = options[i] || buzz.defaults[i];
@@ -716,133 +720,133 @@
 
             this.load = function () {
                 fn('load');
-                
+
                 return this;
             };
 
             this.play = function () {
                 fn('play');
-                
+
                 return this;
             };
 
             this.togglePlay = function () {
                 fn('togglePlay');
-                
+
                 return this;
             };
 
             this.pause = function (time) {
                 fn('pause', time);
-                
+
                 return this;
             };
 
             this.stop = function () {
                 fn('stop');
-                
+
                 return this;
             };
 
             this.mute = function () {
                 fn('mute');
-                
+
                 return this;
             };
 
             this.unmute = function () {
                 fn('unmute');
-                
+
                 return this;
             };
 
             this.toggleMute = function () {
                 fn('toggleMute');
-                
+
                 return this;
             };
 
             this.setVolume = function (volume) {
                 fn('setVolume', volume);
-                
+
                 return this;
             };
 
             this.increaseVolume = function (value) {
                 fn('increaseVolume', value);
-                
+
                 return this;
             };
 
             this.decreaseVolume = function (value) {
                 fn('decreaseVolume', value);
-                
+
                 return this;
             };
 
             this.loop = function () {
                 fn('loop');
-                
+
                 return this;
             };
 
             this.unloop = function () {
                 fn('unloop');
-                
+
                 return this;
             };
 
             this.setTime = function (time) {
                 fn('setTime', time);
-                
+
                 return this;
             };
 
             this.set = function (key, value) {
                 fn('set', key, value);
-                
+
                 return this;
             };
 
             this.bind = function (type, func) {
                 fn('bind', type, func);
-                
+
                 return this;
             };
 
             this.unbind = function (type) {
                 fn('unbind', type);
-                
+
                 return this;
             };
 
             this.bindOnce = function (type, func) {
                 fn('bindOnce', type, func);
-                
+
                 return this;
             };
 
             this.trigger = function (type) {
                 fn('trigger', type);
-                
+
                 return this;
             };
 
             this.fade = function (from, to, duration, callback) {
                 fn('fade', from, to, duration, callback);
-                
+
                 return this;
             };
 
             this.fadeIn = function (duration, callback) {
                 fn('fadeIn', duration, callback);
-                
+
                 return this;
             };
 
             this.fadeOut = function (duration, callback) {
                 fn('fadeOut', duration, callback);
-                
+
                 return this;
             };
 
