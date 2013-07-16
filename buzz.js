@@ -730,6 +730,12 @@
                 return this;
             };
 
+            this.playAny = function () {
+              sounds[Math.floor(Math.random()*sounds.length)].play();
+
+              return this;
+            };
+
             this.togglePlay = function () {
                 fn('togglePlay');
 
