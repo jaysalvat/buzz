@@ -14,19 +14,16 @@ Buzz is a small but powerful Javascript library that allows you to easily take a
             document.getElementById( "timer" ).innerHTML = timer;
         });
 
-### Official website
+#### Official website
 http://buzz.jaysalvat.com/
 
-### Real life demo
+#### Real life demo
 http://buzz.jaysalvat.com/demo/
 
-### Documentation
+#### Documentation
 http://buzz.jaysalvat.com/documentation/
 
-# Contributing
+## Contributing
 
-## Important notes
 Please don't edit files in the `dist` subdirectory as they are generated via Grunt. You'll find source code in the `src` subdirectory!
-
-### Code style
 Regarding code style like indentation and whitespace, **follow the conventions you see used in the source already.**
