@@ -51,8 +51,8 @@ module.exports = function(grunt) {
             publish: {
                 cmd: [
                     'cp -r dist/ tmp/',
-                    'zip -r tmp/buzz.<%= pkg.version %>.zip tmp/buzz.js',
-                    'zip -r tmp/buzz.<%= pkg.version %>.zip tmp/buzz.min.js',
+                    'zip -rj tmp/buzz.zip tmp/buzz.js',
+                    'zip -rj tmp/buzz.zip tmp/buzz.min.js',
                     'git checkout gh-pages',
                     'rm -rf releases/latest/',
                     'cp -r tmp/ releases/<%= pkg.version %>/',
