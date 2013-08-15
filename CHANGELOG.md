@@ -2,8 +2,13 @@
 
 ## CHANGE LOG
 
-### NOT YET RELEASED
+### Buzz 1.1.0 2013-08-15
 
+* Fix setTime infinite loop on Firefox
+* Fix a couple of method chaining bugs 
+* Add AMD and CommonJS support
+* Add iframe support
+* Fix getPlayed method not returning good values
 * Add new architecture src / dist
 * Add minified version
 * Add Gruntfile 
