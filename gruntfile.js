@@ -112,9 +112,9 @@ module.exports = function(grunt) {
 
         grunt.task.run([
             'exec:gitFailIfDirty',
-            'manifests:' + version,
             'build',
             'metadata:' + version,
+            'manifests:' + version,
             'exec:gitAdd',
             'exec:gitCommit:' + version,
             'exec:gitTag:' + version,
