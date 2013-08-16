@@ -73,7 +73,7 @@ module.exports = function(grunt) {
             },
             gitCommit: {
                 cmd: function(message) {
-                    return format('git commit -m "%s"', message);
+                    return format('git commit -m "Build %s"', message);
                 }
             },
             gitTag: {
