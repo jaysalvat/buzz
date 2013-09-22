@@ -46,11 +46,13 @@
             var pid = 0,
                 events = [],
                 eventsOnce = {},
-                supported = buzz.isSupported();
+                supported = buzz.isSupported(),
+                _pool = [],
+                _instance = this;
 
             // publics
             this.load = function () {
-                if (!supported) {
+                if (!supported || poolfn('load')) {
                     return this;
                 }
 
@@ -64,13 +66,21 @@
                     return this;
                 }
 
+                if (this.isPool) {
+                    var snd = getChannel();
+                    if (!snd) {
+                        return;
+                    }
+                    this.sound = snd.sound;
+                }
+
                 this.sound.play();
 
                 return this;
             };
 
             this.togglePlay = function () {
-                if (!supported) {
+                if (!supported || poolfn('togglePlay')) {
                     return this;
                 }
 
@@ -84,7 +94,7 @@
             };
 
             this.pause = function () {
-                if (!supported) {
+                if (!supported || poolfn('pause')) {
                     return this;
                 }
 
@@ -102,7 +112,7 @@
             };
 
             this.stop = function () {
-                if (!supported ) {
+                if (!supported  || poolfn('stop')) {
                     return this;
                 }
 
@@ -121,7 +131,7 @@
             };
 
             this.loop = function () {
-                if (!supported) {
+                if (!supported || poolfn('loop')) {
                     return this;
                 }
 
@@ -135,7 +145,7 @@
             };
 
             this.unloop = function () {
-                if (!supported) {
+                if (!supported || poolfn('unloop')) {
                     return this;
                 }
 
@@ -146,7 +156,7 @@
             };
 
             this.mute = function () {
-                if (!supported) {
+                if (!supported || poolfn('mute')) {
                     return this;
                 }
 
@@ -156,7 +166,7 @@
             };
 
             this.unmute = function () {
-                if (!supported) {
+                if (!supported || poolfn('unmute')) {
                     return this;
                 }
 
@@ -166,7 +176,7 @@
             };
 
             this.toggleMute = function () {
-                if (!supported) {
+                if (!supported || poolfn('toggleMute')) {
                     return this;
                 }
 
@@ -184,7 +194,7 @@
             };
 
             this.setVolume = function (volume) {
-                if (!supported) {
+                if (!supported || poolfn('setVolume', volume)) {
                     return this;
                 }
 
@@ -218,7 +228,7 @@
             };
 
             this.setTime = function (time) {
-                if (!supported) {
+                if (!supported || poolfn('setTime', time)) {
                     return this;
                 }
 
@@ -233,12 +243,21 @@
                 return this;
             };
 
-            this.getTime = function () {
+            this.getTime = function (channelIdx) {
                 if (!supported) {
                     return null;
                 }
 
-                var time = Math.round(this.sound.currentTime * 100) / 100;
+                var time;
+                if (channelIdx !== undefined && this.isPool) {
+                    var channel = getChannel(channelIdx);
+                    if (channel && channel.sound) {
+                        time = Math.round(channel.sound.currentTime * 100) / 100;
+                        return isNaN(time) ? buzz.defaults.placeholder : time;
+                    }
+                }
+
+                time = Math.round(this.sound.currentTime * 100) / 100;
 
                 return isNaN(time) ? buzz.defaults.placeholder : time;
             };
@@ -397,7 +416,7 @@
             };
 
             this.set = function (key, value) {
-                if (!supported) {
+                if (!supported || poolfn('set', key, value)) {
                     return this;
                 }
 
@@ -415,7 +434,7 @@
             };
 
             this.bind = function (types, func) {
-                if (!supported) {
+                if (!supported || poolfn('bind', types, func)) {
                     return this;
                 }
 
@@ -437,7 +456,7 @@
             };
 
             this.unbind = function (types) {
-                if (!supported) {
+                if (!supported || poolfn('unbind', types)) {
                     return this;
                 }
 
@@ -461,7 +480,7 @@
             };
 
             this.bindOnce = function (type, func) {
-                if (!supported) {
+                if (!supported || poolfn('bindOnce', type, func)) {
                     return this;
                 }
 
@@ -480,7 +499,7 @@
             };
 
             this.trigger = function (types) {
-                if (!supported) {
+                if (!supported || poolfn('trigger', types)) {
                     return this;
                 }
 
@@ -545,7 +564,7 @@
             };
 
             this.fadeIn = function (duration, callback) {
-                if (!supported) {
+                if (!supported || poolfn('fadeIn', duration, callback)) {
                     return this;
                 }
 
@@ -553,7 +572,7 @@
             };
 
             this.fadeOut = function (duration, callback) {
-                if (!supported) {
+                if (!supported || poolfn('fadeOut', duration, callback)) {
                     return this;
                 }
 
@@ -621,13 +640,63 @@
                 sound.appendChild(source);
             }
 
+            function poolfn() {
+                if (!_instance.isPool) {
+                    return false;
+                }
+
+                var args = argsToArray(null, arguments),
+                    func = args.shift();
+
+                for (var i = 0; i < _pool.length; i++) {
+                    _pool[ i ][ func ].apply(_pool[ i ], args);
+                }
+                return true;
+            }
+
+            function argsToArray(array, args) {
+                return (array instanceof Array) ? array : Array.prototype.slice.call(args);
+            }
+
+            // look for available channel
+            function getChannel(channelIdx) {
+                if (channelIdx !== undefined) {
+                    return _pool[channelIdx];
+                }
+
+                for (var i =0; i<_pool.length; i++) {
+                    if (_pool[i].isEnded() || _pool[i].isPaused()) {
+                        return _pool[i];
+                    }
+                }
+                return false;
+            }
+
             // init
             if (supported && src) {
+                var i;
 
-                for (var i in buzz.defaults) {
+                for (i in buzz.defaults) {
                     if (buzz.defaults.hasOwnProperty(i)) {
                         options[i] = options[i] || buzz.defaults[i];
                     }
+                }
+
+                // pool or simple sound instance ?
+                if (options.channels > 1) {
+                    this.isPool = true;
+                    var poolsCount = options.channels;
+
+                    for (i = 0; i < poolsCount; i++) {
+                        options.channels = 0;
+                        // clone original sound but only initialize one channel per clone
+                        _pool.push(new buzz.sound(src, options));
+                    }
+
+                    // init first channel
+                    this.sound = _pool[0].sound;
+
+                    return;
                 }
 
                 this.sound = doc.createElement('audio');
