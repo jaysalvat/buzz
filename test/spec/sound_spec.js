@@ -2,32 +2,42 @@
 
 describe('buzz.sound', function() {
 	
-	var sound,
-		file = '../fixtures/song.mp3',
+	var file = 'fixtures/song.mp3',
+		sound = new buzz.sound(file),
 		matchers = {
-			toBePlaying: function() {
-				console.log(this);
-				
-				var audio = this.actual.el;
-				var past = this.actual.el.currentTime;
-				
-				return setTimeout(function() {
-	                return audio.element.currentTime == past;
-	            }, 1100);
-			}
+			
 		};
 	
-	beforeEach(function() {
-		sound = new buzz.sound(file);
-		this.addMatchers(matchers);
+	describe('audio controls', function() {
+		beforeEach(function() {
+			this.addMatchers(matchers);
+		});
+	
+		afterEach(function() {
+			sound.stop();
+		});
+		
+		it ('should play a song normally', function() {
+			sound.play();
+			var past = sound.sound.currentTime;
+			
+			waitsFor(function() {
+				return sound.sound.currentTime > past;
+			}, 'song get started', 1000);
+			
+			runs(function() {
+				expect(sound.sound.currentTime).toBeGreaterThan(past);
+			});
+		});
 	});
 	
-	it ('should not load when the song doesnt exists', function() {
-		try {
-			sound = new buzz.sound('mydummysong.mp3');
-		} catch(e) {
-			expect(sound).toThrow(e);
-		}
+	describe('if the song does not exists', function() {
+		it ('should not load when the song doesnt exists', function() {
+			try {
+				sound = new buzz.sound('mydummysong.mp3');
+			} catch(e) {
+				expect(sound).toThrow(e);
+			}
+		});
 	});
-	
 });
