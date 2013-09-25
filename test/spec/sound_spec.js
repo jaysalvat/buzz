@@ -17,22 +17,36 @@ describe('buzz.sound', function() {
 			sound.stop();
 		});
 		
-		it ('should play a song normally', function() {
-			sound.play();
+		var songHasStarted = function() {
 			var past = sound.sound.currentTime;
 			
 			waitsFor(function() {
 				return sound.sound.currentTime > past;
 			}, 'song get started', 1000);
+		};
+		
+		it('should play a song normally', function() {
+			sound.play();
+			songHasStarted();
 			
 			runs(function() {
-				expect(sound.sound.currentTime).toBeGreaterThan(past);
+				expect(sound.sound.currentTime).toBeGreaterThan(0);
+			});
+		});
+		
+		it('should pause a song', function() {
+			sound.play();
+			songHasStarted();
+			
+			runs(function() {
+				sound.pause()
+				expect(sound.isPaused()).toBeTruthy();
 			});
 		});
 	});
 	
 	describe('if the song does not exists', function() {
-		it ('should not load when the song doesnt exists', function() {
+		it('should not load when the song doesnt exists', function() {
 			try {
 				sound = new buzz.sound('mydummysong.mp3');
 			} catch(e) {
