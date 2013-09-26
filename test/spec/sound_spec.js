@@ -5,7 +5,9 @@ describe('buzz.sound', function() {
 	var file = 'fixtures/song.mp3',
 		sound = new buzz.sound(file),
 		matchers = {
-			
+			isPlaying: function() {
+				return this.actual.getTime() > 0;
+			}
 		};
 		
 	var songHasStarted = function() {
@@ -16,7 +18,31 @@ describe('buzz.sound', function() {
 		}, 'song get started', 1000);
 	};
 	
-	describe('audio controls', function() {
+	describe('initializing a sound', function() {
+		var sound;
+		
+		afterEach(function() {
+			this.addMatchers(matchers);
+		});
+		
+		it('should start playing a sound with volume 10', function() {
+			sound = new buzz.sound(file, {
+				volume: 10
+			});
+			
+			expect(sound.getVolume()).toBe(10);
+		});
+		
+		it('should not load when the file doesnt exists', function() {
+			try {
+				sound = new buzz.sound('mydummysong.mp3');
+			} catch(e) {
+				expect(sound).toThrow(e);
+			}
+		});
+	});
+	
+	describe('audio control', function() {
 		beforeEach(function() {
 			this.addMatchers(matchers);
 		});
@@ -56,7 +82,7 @@ describe('buzz.sound', function() {
 		});
 	});
 	
-	describe('volume controls', function() {
+	describe('volume control', function() {
 		beforeEach(function() {
 			sound.play();
 			songHasStarted();
@@ -104,13 +130,4 @@ describe('buzz.sound', function() {
 		});
 	});
 	
-	describe('if the song does not exists', function() {
-		it('should not load when the song doesnt exists', function() {
-			try {
-				sound = new buzz.sound('mydummysong.mp3');
-			} catch(e) {
-				expect(sound).toThrow(e);
-			}
-		});
-	});
 });
