@@ -60,6 +60,8 @@ describe('buzz.sound', function() {
 		beforeEach(function() {
 			sound.play();
 			songHasStarted();
+			
+			sound.setVolume(10);
 		});
 	
 		afterEach(function() {
@@ -69,29 +71,36 @@ describe('buzz.sound', function() {
 		it('should increase the volume up to 10', function() {
 			var vol = 10;
 			
-			sound.setVolume(vol);
-			expect(sound.getVolume()).toBe(vol);
+			sound.increaseVolume(vol);
+			expect(sound.getVolume()).toBe(20);
 		});
 		
 		it('should decrease the volume up to 5', function() {
 			var vol = 5;
 			
-			sound.setVolume(vol);
-			expect(sound.getVolume()).toBe(vol);
+			sound.decreaseVolume(vol);
+			expect(sound.getVolume()).toBe(5);
 		});
 		
 		it('should decrease the volume to 0 if the volume is a negative number', function() {
-			var vol = -10;
+			var vol = 20;
 			
-			sound.setVolume(vol);
+			sound.decreaseVolume(vol);
 			expect(sound.getVolume()).toBe(0);
 		});
 		
 		it ('should increase the volume up to the maximum if the volume is greater than 100', function() {
 			var vol = 100000;
 			
-			sound.setVolume(vol);
+			sound.increaseVolume(vol);
 			expect(sound.getVolume()).toBe(100);
+		});
+		
+		it ('should mute the sound', function() {
+			sound.mute();
+			
+			expect(sound.getVolume()).toBeGreaterThan(0);
+			expect(sound.isMuted()).toBeTruthy();
 		});
 	});
 	
