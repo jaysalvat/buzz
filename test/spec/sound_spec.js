@@ -7,6 +7,14 @@ describe('buzz.sound', function() {
 		matchers = {
 			
 		};
+		
+	var songHasStarted = function() {
+		var past = sound.getTime();
+
+		waitsFor(function() {
+			return sound.getTime() > past;
+		}, 'song get started', 1000);
+	};
 	
 	describe('audio controls', function() {
 		beforeEach(function() {
@@ -16,14 +24,6 @@ describe('buzz.sound', function() {
 		afterEach(function() {
 			sound.stop();
 		});
-		
-		var songHasStarted = function() {
-			var past = sound.getTime();
-			
-			waitsFor(function() {
-				return sound.getTime() > past;
-			}, 'song get started', 1000);
-		};
 		
 		it('should play a song normally', function() {
 			sound.play();
@@ -53,6 +53,45 @@ describe('buzz.sound', function() {
 				expect(sound.getTime()).toBe(0);
 				expect(sound.isPaused()).toBeTruthy();
 			});
+		});
+	});
+	
+	describe('volume controls', function() {
+		beforeEach(function() {
+			sound.play();
+			songHasStarted();
+		});
+	
+		afterEach(function() {
+			sound.stop();
+		});
+		
+		it('should increase the volume up to 10', function() {
+			var vol = 10;
+			
+			sound.setVolume(vol);
+			expect(sound.getVolume()).toBe(vol);
+		});
+		
+		it('should decrease the volume up to 5', function() {
+			var vol = 5;
+			
+			sound.setVolume(vol);
+			expect(sound.getVolume()).toBe(vol);
+		});
+		
+		it('should decrease the volume to 0 if the volume is a negative number', function() {
+			var vol = -10;
+			
+			sound.setVolume(vol);
+			expect(sound.getVolume()).toBe(0);
+		});
+		
+		it ('should increase the volume up to the maximum if the volume is greater than 100', function() {
+			var vol = 100000;
+			
+			sound.setVolume(vol);
+			expect(sound.getVolume()).toBe(100);
 		});
 	});
 	
