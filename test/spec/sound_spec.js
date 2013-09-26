@@ -18,10 +18,10 @@ describe('buzz.sound', function() {
 		});
 		
 		var songHasStarted = function() {
-			var past = sound.sound.currentTime;
+			var past = sound.getTime();
 			
 			waitsFor(function() {
-				return sound.sound.currentTime > past;
+				return sound.getTime() > past;
 			}, 'song get started', 1000);
 		};
 		
@@ -30,7 +30,7 @@ describe('buzz.sound', function() {
 			songHasStarted();
 			
 			runs(function() {
-				expect(sound.sound.currentTime).toBeGreaterThan(0);
+				expect(sound.getTime()).toBeGreaterThan(0);
 			});
 		});
 		
@@ -40,6 +40,17 @@ describe('buzz.sound', function() {
 			
 			runs(function() {
 				sound.pause()
+				expect(sound.isPaused()).toBeTruthy();
+			});
+		});
+		
+		it('should stop a song', function() {
+			sound.play();
+			songHasStarted();
+			
+			runs(function() {
+				sound.stop()
+				expect(sound.getTime()).toBe(0);
 				expect(sound.isPaused()).toBeTruthy();
 			});
 		});
