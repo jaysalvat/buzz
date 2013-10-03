@@ -1,5 +1,5 @@
 var semver = require('semver'),
-        format = require('util').format;
+	format = require('util').format;
 
 module.exports = function(grunt) {
 
