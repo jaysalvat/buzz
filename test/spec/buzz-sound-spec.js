@@ -2,8 +2,9 @@
 
 describe('buzz.sound', function() {
 	
-	var file = 'fixtures/song.mp3',
-		sound = new buzz.sound(file),
+	var fixture  = 'fixtures/click',
+		formats  = [ "ogg", "mp3", "aac", "wav" ],
+		sound    = new buzz.sound(fixture, { formats: formats }),
 		matchers = {
 			isPlaying: function() {
 				return this.actual.getTime() > 0;
@@ -26,7 +27,8 @@ describe('buzz.sound', function() {
 		});
 		
 		it('should start playing a sound with volume 10', function() {
-			sound = new buzz.sound(file, {
+			sound = new buzz.sound(fixture, { 
+				formats: formats,
 				volume: 10
 			});
 			
@@ -35,7 +37,7 @@ describe('buzz.sound', function() {
 		
 		it('should not load when the file doesnt exists', function() {
 			try {
-				sound = new buzz.sound('mydummysong.mp3');
+				sound = new buzz.sound('mydummysong', { formats: formats });
 			} catch(e) {
 				expect(sound).toThrow(e);
 			}
@@ -65,7 +67,7 @@ describe('buzz.sound', function() {
 			songHasStarted();
 			
 			runs(function() {
-				sound.pause()
+				sound.pause();
 				expect(sound.isPaused()).toBeTruthy();
 			});
 		});
@@ -75,7 +77,7 @@ describe('buzz.sound', function() {
 			songHasStarted();
 			
 			runs(function() {
-				sound.stop()
+				sound.stop();
 				expect(sound.getTime()).toBe(0);
 				expect(sound.isPaused()).toBeTruthy();
 			});
@@ -129,5 +131,4 @@ describe('buzz.sound', function() {
 			expect(sound.isMuted()).toBeTruthy();
 		});
 	});
-	
 });
