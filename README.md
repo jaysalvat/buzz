@@ -29,7 +29,7 @@ http://buzz.jaysalvat.com/documentation/
 Contributing
 ------------
 
-Please don't edit files in the `dist` subdirectory as they are generated via Grunt. You'll find source code in the `src` subdirectory!
+Please don't edit files in the `dist` subdirectory as it is generated via Grunt. You'll find source code in the `src` subdirectory!
 Regarding code style like indentation and whitespace, **follow the conventions you see used in the source already.**
 
 License
