@@ -20,6 +20,7 @@
     var buzz = {
         defaults: {
             autoplay: false,
+            channel: '',
             duration: 5000,
             formats: [],
             loop: false,
@@ -279,6 +280,26 @@
                 return this.sound.playbackRate;
             };
 
+            this.setChannel = function (channel) {
+                if (!supported) {
+                    return this;
+                }
+
+                this.channel = channel;
+                this.sound.mozAudioChannelType = channel;
+
+                return this;
+            };
+
+            this.getChannel = function () {
+                if (!supported) {
+                    return this;
+                }
+
+                return this.channel;
+            };
+
+            
             this.getDuration = function () {
                 if (!supported) {
                     return null;
@@ -632,6 +653,10 @@
 
                 this.sound = doc.createElement('audio');
 
+                if (options.channel) {
+                    this.setChannel(options.channel);
+                }
+                
                 if (src instanceof Array) {
                     for (var j in src) {
                         if (src.hasOwnProperty(j)) {
