@@ -42,6 +42,11 @@ describe('buzz.sound', function() {
 				expect(sound).toThrow(e);
 			}
 		});
+		
+		it('should set the channel when passed as an option', function() {
+            sound = new buzz.sound(fixture, { formats: formats, channel: 'alarm' });
+			expect(sound.getChannel()).toBe('alarm');
+		});
 	});
 	
 	describe('audio control', function() {
