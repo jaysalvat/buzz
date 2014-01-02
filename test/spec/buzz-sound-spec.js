@@ -19,13 +19,14 @@ describe('buzz.sound', function() {
 		}, 'song get started', 1000);
 	};
 	
+
 	describe('initializing a sound', function() {
 		var sound;
 		
 		afterEach(function() {
 			this.addMatchers(matchers);
 		});
-		
+	
 		it('should start playing a sound with volume 10', function() {
 			sound = new buzz.sound(fixture, { 
 				formats: formats,
@@ -41,6 +42,15 @@ describe('buzz.sound', function() {
 			} catch(e) {
 				expect(sound).toThrow(e);
 			}
+		});
+
+		it('should not preload when the preload option==false', function() {
+			sound = new buzz.sound(fixture, { formats: formats, preload:false });
+			sound.bind('loadeddata', function(e){
+				e.stopPropagation();
+    			e.preventDefault();
+    			expect('ASYNC FAILURE IN should not preload when the preload option==false').toBe(false);
+				});
 		});
 	});
 	
