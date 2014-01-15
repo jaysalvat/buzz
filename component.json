@@ -6,6 +6,9 @@
   "author": "Jay Salvat",
   "license": "MIT",
   "main": "dist/buzz.js",
+  "scripts":[
+    "dist/buzz.js"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:jaysalvat/buzz.git"
