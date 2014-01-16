@@ -626,7 +626,8 @@
 
                 for (var i in buzz.defaults) {
                     if (buzz.defaults.hasOwnProperty(i)) {
-                        options[i] = options[i] || buzz.defaults[i];
+                        if (options[i] === undefined)
+                            options[i] = buzz.defaults[i];
                     }
                 }
 
