@@ -1,6 +1,6 @@
  // ----------------------------------------------------------------------------
  // Buzz, a Javascript HTML5 Audio library
- // v1.1.0 - released 2013-08-15 13:18
+ // v1.1.0 - released 2013-09-22 14:25
  // Licensed under the MIT license.
  // http://buzz.jaysalvat.com/
  // ----------------------------------------------------------------------------
@@ -40,9 +40,9 @@
         sound: function(src, options) {
             options = options || {};
             var doc = options.document || buzz.defaults.document;
-            var pid = 0, events = [], eventsOnce = {}, supported = buzz.isSupported();
+            var pid = 0, events = [], eventsOnce = {}, supported = buzz.isSupported(), _pool = [], _instance = this;
             this.load = function() {
-                if (!supported) {
+                if (!supported || poolfn("load")) {
                     return this;
                 }
                 this.sound.load();
@@ -52,11 +52,18 @@
                 if (!supported) {
                     return this;
                 }
+                if (this.isPool) {
+                    var snd = getChannel();
+                    if (!snd) {
+                        return;
+                    }
+                    this.sound = snd.sound;
+                }
                 this.sound.play();
                 return this;
             };
             this.togglePlay = function() {
-                if (!supported) {
+                if (!supported || poolfn("togglePlay")) {
                     return this;
                 }
                 if (this.sound.paused) {
@@ -67,7 +74,7 @@
                 return this;
             };
             this.pause = function() {
-                if (!supported) {
+                if (!supported || poolfn("pause")) {
                     return this;
                 }
                 this.sound.pause();
@@ -80,7 +87,7 @@
                 return this.sound.paused;
             };
             this.stop = function() {
-                if (!supported) {
+                if (!supported || poolfn("stop")) {
                     return this;
                 }
                 this.setTime(0);
@@ -94,7 +101,7 @@
                 return this.sound.ended;
             };
             this.loop = function() {
-                if (!supported) {
+                if (!supported || poolfn("loop")) {
                     return this;
                 }
                 this.sound.loop = "loop";
@@ -105,7 +112,7 @@
                 return this;
             };
             this.unloop = function() {
-                if (!supported) {
+                if (!supported || poolfn("unloop")) {
                     return this;
                 }
                 this.sound.removeAttribute("loop");
@@ -113,21 +120,21 @@
                 return this;
             };
             this.mute = function() {
-                if (!supported) {
+                if (!supported || poolfn("mute")) {
                     return this;
                 }
                 this.sound.muted = true;
                 return this;
             };
             this.unmute = function() {
-                if (!supported) {
+                if (!supported || poolfn("unmute")) {
                     return this;
                 }
                 this.sound.muted = false;
                 return this;
             };
             this.toggleMute = function() {
-                if (!supported) {
+                if (!supported || poolfn("toggleMute")) {
                     return this;
                 }
                 this.sound.muted = !this.sound.muted;
@@ -140,7 +147,7 @@
                 return this.sound.muted;
             };
             this.setVolume = function(volume) {
-                if (!supported) {
+                if (!supported || poolfn("setVolume", volume)) {
                     return this;
                 }
                 if (volume < 0) {
@@ -166,7 +173,7 @@
                 return this.setVolume(this.volume - (value || 1));
             };
             this.setTime = function(time) {
-                if (!supported) {
+                if (!supported || poolfn("setTime", time)) {
                     return this;
                 }
                 var set = true;
@@ -178,11 +185,19 @@
                 });
                 return this;
             };
-            this.getTime = function() {
+            this.getTime = function(channelIdx) {
                 if (!supported) {
                     return null;
                 }
-                var time = Math.round(this.sound.currentTime * 100) / 100;
+                var time;
+                if (channelIdx !== undefined && this.isPool) {
+                    var channel = getChannel(channelIdx);
+                    if (channel && channel.sound) {
+                        time = Math.round(channel.sound.currentTime * 100) / 100;
+                        return isNaN(time) ? buzz.defaults.placeholder : time;
+                    }
+                }
+                time = Math.round(this.sound.currentTime * 100) / 100;
                 return isNaN(time) ? buzz.defaults.placeholder : time;
             };
             this.setPercent = function(percent) {
@@ -321,7 +336,7 @@
                 }
             };
             this.set = function(key, value) {
-                if (!supported) {
+                if (!supported || poolfn("set", key, value)) {
                     return this;
                 }
                 this.sound[key] = value;
@@ -334,7 +349,7 @@
                 return key ? this.sound[key] : this.sound;
             };
             this.bind = function(types, func) {
-                if (!supported) {
+                if (!supported || poolfn("bind", types, func)) {
                     return this;
                 }
                 types = types.split(" ");
@@ -353,7 +368,7 @@
                 return this;
             };
             this.unbind = function(types) {
-                if (!supported) {
+                if (!supported || poolfn("unbind", types)) {
                     return this;
                 }
                 types = types.split(" ");
@@ -370,7 +385,7 @@
                 return this;
             };
             this.bindOnce = function(type, func) {
-                if (!supported) {
+                if (!supported || poolfn("bindOnce", type, func)) {
                     return this;
                 }
                 var self = this;
@@ -385,7 +400,7 @@
                 return this;
             };
             this.trigger = function(types) {
-                if (!supported) {
+                if (!supported || poolfn("trigger", types)) {
                     return this;
                 }
                 types = types.split(" ");
@@ -433,13 +448,13 @@
                 return this;
             };
             this.fadeIn = function(duration, callback) {
-                if (!supported) {
+                if (!supported || poolfn("fadeIn", duration, callback)) {
                     return this;
                 }
                 return this.setVolume(0).fadeTo(100, duration, callback);
             };
             this.fadeOut = function(duration, callback) {
-                if (!supported) {
+                if (!supported || poolfn("fadeOut", duration, callback)) {
                     return this;
                 }
                 return this.fadeTo(0, duration, callback);
@@ -488,11 +503,46 @@
                 }
                 sound.appendChild(source);
             }
+            function poolfn() {
+                if (!_instance.isPool) {
+                    return false;
+                }
+                var args = argsToArray(null, arguments), func = args.shift();
+                for (var i = 0; i < _pool.length; i++) {
+                    _pool[i][func].apply(_pool[i], args);
+                }
+                return true;
+            }
+            function argsToArray(array, args) {
+                return array instanceof Array ? array : Array.prototype.slice.call(args);
+            }
+            function getChannel(channelIdx) {
+                if (channelIdx !== undefined) {
+                    return _pool[channelIdx];
+                }
+                for (var i = 0; i < _pool.length; i++) {
+                    if (_pool[i].isEnded() || _pool[i].isPaused()) {
+                        return _pool[i];
+                    }
+                }
+                return false;
+            }
             if (supported && src) {
-                for (var i in buzz.defaults) {
+                var i;
+                for (i in buzz.defaults) {
                     if (buzz.defaults.hasOwnProperty(i)) {
                         options[i] = options[i] || buzz.defaults[i];
                     }
+                }
+                if (options.channels > 1) {
+                    this.isPool = true;
+                    var poolsCount = options.channels;
+                    for (i = 0; i < poolsCount; i++) {
+                        options.channels = 0;
+                        _pool.push(new buzz.sound(src, options));
+                    }
+                    this.sound = _pool[0].sound;
+                    return;
                 }
                 this.sound = doc.createElement("audio");
                 if (src instanceof Array) {
