@@ -26,7 +26,7 @@
             placeholder: '--',
             preload: 'metadata',
             volume: 80,
-            document: document // iframe support
+            document: window.document // iframe support
         },
         types: {
             'mp3': 'audio/mpeg',
