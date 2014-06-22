@@ -17,7 +17,9 @@
     }
 })('buzz', this, function () {
 
+    var AudioContextCtor = window.AudioContext || window.webkitAudioContext;
     var buzz = {
+        audioCtx: AudioContextCtor ? new AudioContextCtor() : null,
         defaults: {
             autoplay: false,
             duration: 5000,
@@ -632,6 +634,12 @@
                 }
 
                 this.sound = doc.createElement('audio');
+                
+                // Use web audio if possible to improve performance.
+                if (buzz.audioCtx) {
+                    this.source = buzz.audioCtx.createMediaElementSource(this.sound);
+                    this.source.connect(buzz.audioCtx.destination);
+                }
 
                 if (src instanceof Array) {
                     for (var j in src) {
