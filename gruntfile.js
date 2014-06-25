@@ -60,7 +60,7 @@ module.exports = function(grunt) {
                     'git add -A releases/<%= pkg.version %>',
                     'git add -A releases/latest',
                     'git commit -m "Published v<%= pkg.version %>."',
-                    'git push',
+                    'git push origin gh-pages',
                     'git checkout -',
                     'rm -rf tmp/'
                 ].join(' && ')
