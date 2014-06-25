@@ -1,6 +1,6 @@
  // ----------------------------------------------------------------------------
  // Buzz, a Javascript HTML5 Audio library
- // v1.1.0 - released 2014-06-22 02:50
+ // v1.1.1 - released 2014-06-25 13:36
  // Licensed under the MIT license.
  // http://buzz.jaysalvat.com/
  // ----------------------------------------------------------------------------
@@ -28,7 +28,7 @@
             placeholder: "--",
             preload: "metadata",
             volume: 80,
-            document: document
+            document: window.document
         },
         types: {
             mp3: "audio/mpeg",
