@@ -126,7 +126,7 @@ module.exports = function(grunt) {
     grunt.registerTask('manifests', 'Update manifests.', function(version) {
         var _   = grunt.util._,
             pkg = grunt.file.readJSON('package.json'),
-            cpt = grunt.file.readJSON('component.json');
+            cpt = grunt.file.readJSON('bower.json');
 
         if (!semver.valid(version)) {
             grunt.fatal('Invalid version');
@@ -141,7 +141,7 @@ module.exports = function(grunt) {
         pkg = JSON.stringify(pkg, null, 2);
 
         grunt.file.write('package.json', pkg);
-        grunt.file.write('component.json', cpt);
+        grunt.file.write('bower.json', cpt);
     });
 
     grunt.registerTask('metadata', 'Create metadata file.', function(version) {
