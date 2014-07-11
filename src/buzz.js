@@ -3,7 +3,7 @@
 // Licensed under the MIT license.
 // http://buzz.jaysalvat.com/
 // ----------------------------------------------------------------------------
-// Copyright (C) 2013 Jay Salvat
+// Copyright (C) Jay Salvat
 // http://jaysalvat.com/
 // ----------------------------------------------------------------------------
 
