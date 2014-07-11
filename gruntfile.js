@@ -135,14 +135,10 @@ module.exports = function(grunt) {
         pkg.version = version;
         bwr.version = version;
         cpt.version = version;
-        
-        pkg = JSON.stringify(pkg, null, 2);
-        bwr = JSON.stringify(bwr, null, 2);
-        cpt = JSON.stringify(cpt, null, 2);
 
-        grunt.file.write('package.json', pkg);
-        grunt.file.write('bower.json', bwr);
-        grunt.file.write('component.json', cpt);
+        grunt.file.write('package.json',   JSON.stringify(pkg, null, 2));
+        grunt.file.write('bower.json',     JSON.stringify(bwr, null, 2));
+        grunt.file.write('component.json', JSON.stringify(cpt, null, 2));
     });
 
     grunt.registerTask('metadata', 'Create metadata file.', function(version) {
