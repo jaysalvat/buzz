@@ -2,6 +2,19 @@
 
 ## CHANGE LOG
 
+### Buzz 1.1.3 2014-07-11
+
+* Get component.json back
+
+### Buzz 1.1.2 2014-07-07
+
+* Remove component.json and add bower.json
+
+### Buzz 1.1.1 2014-06-25
+
+* Route through web audio API to improve performance if available
+* Qualify window.document because some environments (e.g. node-webkit)
+
 ### Buzz 1.1.0 2013-08-15
 
 * Fix setTime infinite loop on Firefox
