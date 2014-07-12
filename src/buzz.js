@@ -7,15 +7,15 @@
 // http://jaysalvat.com/
 // ----------------------------------------------------------------------------
 
-(function (name, context, factory) {
+(function (context, factory) {
     if (typeof module !== 'undefined' && module.exports) {
         module.exports = factory();
-    } else if (typeof context.define === 'function' && context.define.amd) {
-        define(name, [], factory);
+    } else if (typeof define === 'function' && define.amd) {
+        define([], factory);
     } else {
-        context[name] = factory();
+        context.buzz = factory();
     }
-})('buzz', this, function () {
+})(this, function () {
 
     var AudioContextCtor = window.AudioContext || window.webkitAudioContext;
     var buzz = {
