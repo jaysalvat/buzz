@@ -17,9 +17,10 @@
     }
 })(this, function () {
 
-    var AudioContextCtor = window.AudioContext || window.webkitAudioContext;
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+
     var buzz = {
-        audioCtx: AudioContextCtor ? new AudioContextCtor() : null,
+        audioCtx: window.AudioContext ? new AudioContext() : null,
         defaults: {
             autoplay: false,
             duration: 5000,
@@ -28,6 +29,7 @@
             placeholder: '--',
             preload: 'metadata',
             volume: 80,
+            webAudioApi: true,
             document: window.document // iframe support
         },
         types: {
@@ -636,7 +638,7 @@
                 this.sound = doc.createElement('audio');
                 
                 // Use web audio if possible to improve performance.
-                if (buzz.audioCtx) {
+                if (options.webAudioApi && buzz.audioCtx) {
                     this.source = buzz.audioCtx.createMediaElementSource(this.sound);
                     this.source.connect(buzz.audioCtx.destination);
                 }

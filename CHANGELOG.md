@@ -2,6 +2,14 @@
 
 ## CHANGE LOG
 
+### Buzz 1.1.5 2014-09-10
+
+* Add 'webAudiApi:true' option to enable/disable webAudioApi routing
+
+### Buzz 1.1.4 2014-07-13
+
+* Improve UMD wrapper
+
 ### Buzz 1.1.3 2014-07-11
 
 * Get component.json back
