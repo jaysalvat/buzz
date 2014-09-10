@@ -10,7 +10,7 @@ module.exports = function(grunt) {
         banner: [
             ' // ----------------------------------------------------------------------------',
             ' // <%= pkg.description %>',
-            ' // v<%= pkg.version %> - released <%= grunt.template.today("yyyy-mm-dd HH:MM") %>',
+            ' // v<%= pkg.version %> - Built <%= grunt.template.today("yyyy-mm-dd HH:MM") %>',
             ' // Licensed under the MIT license.',
             ' // http://buzz.jaysalvat.com/',
             ' // ----------------------------------------------------------------------------',
@@ -94,7 +94,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    grunt.registerTask('build',   ['jshint', 'uglify']);
+    grunt.registerTask('build',   ['jshint', 'uglify', 'metadata']);
     grunt.registerTask('publish', ['exec:publish']);
     grunt.registerTask('default', ['build']);
 
@@ -142,6 +142,10 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('metadata', 'Create metadata file.', function(version) {
+        if (!version) {
+            version = grunt.file.readJSON('package.json').version;
+        }
+
         var metadata = {
             'date': grunt.template.today("yyyy-mm-dd HH:MM:ss"),
             'version': version
