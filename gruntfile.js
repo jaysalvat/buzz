@@ -93,10 +93,15 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
 
+    grunt.registerTask('default', ['build']);
     grunt.registerTask('build',   ['jshint', 'uglify', 'metadata']);
     grunt.registerTask('publish', ['exec:publish']);
-    grunt.registerTask('default', ['build']);
+
+    // Audio can't be tested by PhantomJs. 
+    // so just jshint. Better idea?
+    grunt.registerTask('test',    ['jshint']);
 
     grunt.registerTask('release', 'Release lib.', function(version) {
         var pkg = grunt.file.readJSON('package.json');
