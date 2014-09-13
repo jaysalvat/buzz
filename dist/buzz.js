@@ -1,6 +1,6 @@
  // ----------------------------------------------------------------------------
  // Buzz, a Javascript HTML5 Audio library
- // v1.1.5 - Built 2014-09-11 12:00
+ // v1.1.6 - Built 2014-09-13 14:38
  // Licensed under the MIT license.
  // http://buzz.jaysalvat.com/
  // ----------------------------------------------------------------------------
@@ -606,6 +606,10 @@
             };
             this.unloop = function() {
                 fn("unloop");
+                return this;
+            };
+            this.setSpeed = function(speed) {
+                fn("setSpeed", speed);
                 return this;
             };
             this.setTime = function(time) {
