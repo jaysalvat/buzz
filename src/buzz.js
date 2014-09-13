@@ -788,6 +788,12 @@
                 return this;
             };
 
+            this.setSpeed = function (speed) {
+                fn('setSpeed', speed);
+
+                return this;
+            };
+
             this.setTime = function (time) {
                 fn('setTime', time);
 
