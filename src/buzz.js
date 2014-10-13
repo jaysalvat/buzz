@@ -29,7 +29,7 @@
             placeholder: '--',
             preload: 'metadata',
             volume: 80,
-            webAudioApi: true,
+            webAudioApi: false,
             document: window.document // iframe support
         },
         types: {
