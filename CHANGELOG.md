@@ -2,7 +2,7 @@
 
 ## CHANGE LOG
 
-### Buzz 1.1.6 2014-10-13
+### Buzz 1.1.7 2014-10-13
 
 * 'webAudiApi' option set to false by default. Switching to webAudioApi was a bad idea (numerous Firefox bugs)
 
