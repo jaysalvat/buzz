@@ -7,7 +7,11 @@
 // http://jaysalvat.com/
 // ----------------------------------------------------------------------------
 
+/* global define */
+
 (function (context, factory) {
+    "use strict";
+
     if (typeof module !== 'undefined' && module.exports) {
         module.exports = factory();
     } else if (typeof define === 'function' && define.amd) {
@@ -16,8 +20,9 @@
         context.buzz = factory();
     }
 })(this, function () {
+    "use strict";
 
-    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
 
     var buzz = {
         audioCtx: window.AudioContext ? new AudioContext() : null,
@@ -231,7 +236,7 @@
                     if (set === true) {
                         set = false;
                         this.sound.currentTime = time;
-                   }
+                    }
                 });
 
                 return this;
@@ -453,7 +458,7 @@
 
                     for (var i = 0; i < events.length; i++) {
                         var namespace = events[i].idx.split('.');
-                        if (events[i].idx == idx || (namespace[1] && namespace[1] == idx.replace('.', ''))) {
+                        if (events[i].idx == idx || (namespace[1] && namespace[1] === idx.replace('.', ''))) {
                             this.sound.removeEventListener(type, events[i].func, true);
                             // remove event
                             events.splice(i, 1);
@@ -496,7 +501,7 @@
                     for (var i = 0; i < events.length; i++) {
                         var eventType = events[i].idx.split('.');
 
-                        if (events[i].idx == idx || (eventType[0] && eventType[0] == idx.replace('.', ''))) {
+                        if (events[i].idx === idx || (eventType[0] && eventType[0] === idx.replace('.', ''))) {
                             var evt = doc.createEvent('HTMLEvents');
 
                             evt.initEvent(eventType[0], false, true);
@@ -630,8 +635,9 @@
 
                 for (var i in buzz.defaults) {
                     if (buzz.defaults.hasOwnProperty(i)) {
-                        if (options[i] === undefined)
+                        if (options[i] === undefined) {
                             options[i] = buzz.defaults[i];
+                        }
                     }
                 }
 
@@ -702,7 +708,7 @@
 
                 for (var a = 0; a < soundArray.length; a++) {
                     for (var i = 0; i < sounds.length; i++) {
-                        if (sounds[i] == soundArray[a]) {
+                        if (sounds[i] === soundArray[a]) {
                             sounds.splice(i, 1);
                             break;
                         }
@@ -903,11 +909,11 @@
         fromTimer: function (time) {
             var splits = time.toString().split(':');
 
-            if (splits && splits.length == 3) {
+            if (splits && splits.length === 3) {
                 time = (parseInt(splits[0], 10) * 3600) + (parseInt(splits[1], 10) * 60) + parseInt(splits[2], 10);
             }
 
-            if (splits && splits.length == 2) {
+            if (splits && splits.length === 2) {
                 time = (parseInt(splits[0], 10) * 60) + parseInt(splits[1], 10);
             }
 
