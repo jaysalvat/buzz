@@ -7,7 +7,7 @@
 // http://jaysalvat.com/
 // ----------------------------------------------------------------------------
 
-/* global define */
+/* global module, define */
 
 (function (context, factory) {
     "use strict";
@@ -458,7 +458,7 @@
 
                     for (var i = 0; i < events.length; i++) {
                         var namespace = events[i].idx.split('.');
-                        if (events[i].idx == idx || (namespace[1] && namespace[1] === idx.replace('.', ''))) {
+                        if (events[i].idx === idx || (namespace[1] && namespace[1] === idx.replace('.', ''))) {
                             this.sound.removeEventListener(type, events[i].func, true);
                             // remove event
                             events.splice(i, 1);
@@ -488,7 +488,7 @@
                 return this;
             };
 
-            this.trigger = function (types) {
+            this.trigger = function (types, detail) {
                 if (!supported) {
                     return this;
                 }
@@ -502,9 +502,11 @@
                         var eventType = events[i].idx.split('.');
 
                         if (events[i].idx === idx || (eventType[0] && eventType[0] === idx.replace('.', ''))) {
-                            var evt = doc.createEvent('HTMLEvents');
-
-                            evt.initEvent(eventType[0], false, true);
+                            var evt = new CustomEvent(eventType[0], {
+                                detail: detail,
+                                bulles: true,
+                                cancelable: true
+                            });
 
                             this.sound.dispatchEvent(evt);
                         }
@@ -599,6 +601,28 @@
                 }
             };
 
+            this.addSource = function (src) {
+                var self   = this,
+                    source = doc.createElement('source');
+
+                source.src = src;
+
+                if (buzz.types[getExt(src)]) {
+                    source.type = buzz.types[getExt(src)];
+                }
+
+                this.sound.appendChild(source);
+
+                source.addEventListener('error', function (e) {
+                    self.sound.networkState = 3;
+                    self.trigger('sourceerror', {
+                        'originalEvent': e
+                    });
+                });
+
+                return source;
+            };
+
             // privates
             function timerangeToArray(timeRange) {
                 var array = [],
@@ -616,18 +640,6 @@
 
             function getExt(filename) {
                 return filename.split('.').pop();
-            }
-
-            function addSource(sound, src) {
-                var source = doc.createElement('source');
-
-                source.src = src;
-
-                if (buzz.types[getExt(src)]) {
-                    source.type = buzz.types[getExt(src)];
-                }
-
-                sound.appendChild(source);
             }
 
             // init
@@ -652,17 +664,17 @@
                 if (src instanceof Array) {
                     for (var j in src) {
                         if (src.hasOwnProperty(j)) {
-                            addSource(this.sound, src[j]);
+                            this.addSource(src[j]);
                         }
                     }
                 } else if (options.formats.length) {
                     for (var k in options.formats) {
                         if (options.formats.hasOwnProperty(k)) {
-                            addSource(this.sound, src + '.' + options.formats[k]);
+                            this.addSource(src + '.' + options.formats[k]);
                         }
                     }
                 } else {
-                    addSource(this.sound, src);
+                    this.addSource(src);
                 }
 
                 if (options.loop) {
