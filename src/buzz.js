@@ -6,8 +6,8 @@
 // Copyright (C) Jay Salvat
 // http://jaysalvat.com/
 // ----------------------------------------------------------------------------
-
-/* global module, define */
+/* jshint browser: true, node: true */
+/* global define */
 
 (function (context, factory) {
     "use strict";

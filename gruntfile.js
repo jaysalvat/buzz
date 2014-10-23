@@ -2,7 +2,8 @@ var semver = require('semver'),
 	format = require('util').format;
 
 module.exports = function(grunt) {
-
+    "use strict";
+    
     grunt.initConfig({
 
         pkg: grunt.file.readJSON('package.json'),
@@ -21,7 +22,10 @@ module.exports = function(grunt) {
         ].join('\n'),
 
         jshint: {
-            files: ['gruntfile.js', 'src/**/*.js']
+            files: ['gruntfile.js', 'src/**/*.js'],
+            options: {
+                jshintrc: '.jshintrc'
+            }
         },
 
         uglify: {

@@ -1,0 +1,7 @@
+{
+  "browser": true,
+  "node": true,
+  "globals": {
+    "define": true
+  }
+}
