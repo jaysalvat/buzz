@@ -11,12 +11,14 @@ describe('buzz.sound', function() {
 			}
 		};
 		
-	var songHasStarted = function() {
+	var songHasStarted = function(done) {
 		var past = sound.getTime();
 
-		waitsFor(function() {
-			return sound.getTime() > past;
-		}, 'song get started', 1000);
+		setTimeout(function() {
+			if (sound.getTime() > past) {
+				done();
+			}
+		}, 1000);
 	};
 	
 
@@ -24,7 +26,7 @@ describe('buzz.sound', function() {
 		var sound;
 		
 		afterEach(function() {
-			this.addMatchers(matchers);
+			jasmine.Expectation.addMatchers(matchers);
 		});
 	
 		it('should start playing a sound with volume 10', function() {
@@ -50,13 +52,16 @@ describe('buzz.sound', function() {
 				e.stopPropagation();
     			e.preventDefault();
     			expect('ASYNC FAILURE IN should not preload when the preload option==false').toBe(false);
-				});
+			});
 		});
 	});
 	
 	describe('audio control', function() {
-		beforeEach(function() {
-			this.addMatchers(matchers);
+		beforeEach(function(done) {
+			jasmine.Expectation.addMatchers(matchers);
+
+			sound.play();
+			songHasStarted(done);
 		});
 	
 		afterEach(function() {
@@ -64,33 +69,18 @@ describe('buzz.sound', function() {
 		});
 		
 		it('should play a song normally', function() {
-			sound.play();
-			songHasStarted();
-			
-			runs(function() {
-				expect(sound.getTime()).toBeGreaterThan(0);
-			});
+			expect(sound.getTime()).toBeGreaterThan(0);
 		});
 		
 		it('should pause a song', function() {
-			sound.play();
-			songHasStarted();
-			
-			runs(function() {
-				sound.pause();
-				expect(sound.isPaused()).toBeTruthy();
-			});
+			sound.pause();
+			expect(sound.isPaused()).toBeTruthy();
 		});
 		
 		it('should stop a song', function() {
-			sound.play();
-			songHasStarted();
-			
-			runs(function() {
-				sound.stop();
-				expect(sound.getTime()).toBe(0);
-				expect(sound.isPaused()).toBeTruthy();
-			});
+			sound.stop();
+			expect(sound.getTime()).toBe(0);
+			expect(sound.isPaused()).toBeTruthy();
 		});
 	});
 	
