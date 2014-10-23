@@ -502,11 +502,11 @@
                         var eventType = events[i].idx.split('.');
 
                         if (events[i].idx === idx || (eventType[0] && eventType[0] === idx.replace('.', ''))) {
-                            var evt = new CustomEvent(eventType[0], {
-                                detail: detail,
-                                bulles: true,
-                                cancelable: true
-                            });
+                            var evt = doc.createEvent('HTMLEvents');
+
+                            evt.initEvent(eventType[0], false, true);
+
+                            evt.originalEvent = detail;
 
                             this.sound.dispatchEvent(evt);
                         }
@@ -615,9 +615,7 @@
 
                 source.addEventListener('error', function (e) {
                     self.sound.networkState = 3;
-                    self.trigger('sourceerror', {
-                        'originalEvent': e
-                    });
+                    self.trigger('sourceerror', e);
                 });
 
                 return source;
