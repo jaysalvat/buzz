@@ -2,6 +2,10 @@
 
 ## CHANGE LOG
 
+### Buzz 1.1.8 2015-01-12
+
+* Trigger sourceerror when sound file is not found
+
 ### Buzz 1.1.7 2014-10-13
 
 * 'webAudiApi' option set to false by default. Switching to webAudioApi was a bad idea (numerous Firefox bugs)
