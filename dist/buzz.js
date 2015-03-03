@@ -1,6 +1,6 @@
  // ----------------------------------------------------------------------------
  // Buzz, a Javascript HTML5 Audio library
- // v1.1.8 - Built 2015-01-12 11:08
+ // v1.1.9 - Built 2015-03-03 14:20
  // Licensed under the MIT license.
  // http://buzz.jaysalvat.com/
  // ----------------------------------------------------------------------------
@@ -21,7 +21,6 @@
     "use strict";
     var AudioContext = window.AudioContext || window.webkitAudioContext;
     var buzz = {
-        audioCtx: window.AudioContext ? new AudioContext() : null,
         defaults: {
             autoplay: false,
             duration: 5e3,
@@ -42,6 +41,16 @@
         },
         sounds: [],
         el: document.createElement("audio"),
+        getAudioContext: function() {
+            if (this.audioCtx === undefined) {
+                try {
+                    this.audioCtx = AudioContext ? new AudioContext() : null;
+                } catch (e) {
+                    this.audioCtx = null;
+                }
+            }
+            return this.audioCtx;
+        },
         sound: function(src, options) {
             options = options || {};
             var doc = options.document || buzz.defaults.document;
@@ -508,9 +517,12 @@
                     }
                 }
                 this.sound = doc.createElement("audio");
-                if (options.webAudioApi && buzz.audioCtx) {
-                    this.source = buzz.audioCtx.createMediaElementSource(this.sound);
-                    this.source.connect(buzz.audioCtx.destination);
+                if (options.webAudioApi) {
+                    var audioCtx = buzz.getAudioContext();
+                    if (audioCtx) {
+                        this.source = audioCtx.createMediaElementSource(this.sound);
+                        this.source.connect(audioCtx.destination);
+                    }
                 }
                 if (src instanceof Array) {
                     for (var j in src) {
