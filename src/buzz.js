@@ -25,7 +25,6 @@
     var AudioContext = window.AudioContext || window.webkitAudioContext;
 
     var buzz = {
-        audioCtx: window.AudioContext ? new AudioContext() : null,
         defaults: {
             autoplay: false,
             duration: 5000,
@@ -46,6 +45,19 @@
         },
         sounds: [],
         el: document.createElement('audio'),
+        
+        getAudioContext: function() {
+            if (this.audioCtx === undefined) {
+                try {
+                    this.audioCtx = AudioContext ? new AudioContext() : null;
+                } catch (e) {
+                    // There is a limit to how many contexts you can have, so fall back in case of errors constructing it
+                    this.audioCtx = null;
+                }
+            }
+          
+            return this.audioCtx;
+        },
 
         sound: function (src, options) {
             options = options || {};
@@ -654,9 +666,12 @@
                 this.sound = doc.createElement('audio');
                 
                 // Use web audio if possible to improve performance.
-                if (options.webAudioApi && buzz.audioCtx) {
-                    this.source = buzz.audioCtx.createMediaElementSource(this.sound);
-                    this.source.connect(buzz.audioCtx.destination);
+                if (options.webAudioApi) {
+                    var audioCtx = buzz.getAudioContext();
+                    if (audioCtx) {
+                      this.source = audioCtx.createMediaElementSource(this.sound);
+                      this.source.connect(audioCtx.destination);
+                    }
                 }
 
                 if (src instanceof Array) {
