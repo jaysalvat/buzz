@@ -1,6 +1,6 @@
  // ----------------------------------------------------------------------------
  // Buzz, a Javascript HTML5 Audio library
- // v1.1.9 - Built 2015-03-03 14:20
+ // v1.1.10 - Built 2015-04-20 13:05
  // Licensed under the MIT license.
  // http://buzz.jaysalvat.com/
  // ----------------------------------------------------------------------------
@@ -490,7 +490,6 @@
                 }
                 this.sound.appendChild(source);
                 source.addEventListener("error", function(e) {
-                    self.sound.networkState = 3;
                     self.trigger("sourceerror", e);
                 });
                 return source;
