@@ -626,7 +626,6 @@
                 this.sound.appendChild(source);
 
                 source.addEventListener('error', function (e) {
-                    self.sound.networkState = 3;
                     self.trigger('sourceerror', e);
                 });
 
