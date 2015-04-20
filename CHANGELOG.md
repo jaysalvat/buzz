@@ -2,6 +2,14 @@
 
 ## CHANGE LOG
 
+### Buzz 1.1.10 2015-04-20
+
+* Fix #93 readOnly networkState error
+
+### Buzz 1.1.9 2015-03-03
+
+* Don't create the AudioContext unless it is needed
+
 ### Buzz 1.1.8 2015-01-12
 
 * Trigger sourceerror when sound file is not found
