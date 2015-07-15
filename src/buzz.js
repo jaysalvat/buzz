@@ -527,7 +527,8 @@
 
                 return this;
             };
-
+            
+            var currentFade;
             this.fadeTo = function (to, duration, callback) {
                 if (!supported) {
                     return this;
@@ -547,7 +548,8 @@
                 this.play();
 
                 function doFade() {
-                    setTimeout(function () {
+                    clearTimeout(currentFade);
+                    currentFade = setTimeout(function () {
                         if (from < to && self.volume < to) {
                             self.setVolume(self.volume += 1);
                             doFade();
