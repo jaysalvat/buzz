@@ -27,6 +27,7 @@
     var buzz = {
         defaults: {
             autoplay: false,
+            crossOrigin: false,
             duration: 5000,
             formats: [],
             loop: false,
@@ -663,6 +664,11 @@
                 }
 
                 this.sound = doc.createElement('audio');
+                
+                // Shoud we set crossOrigin?
+                if (options.crossOrigin !== null) {
+                    this.sound.crossOrigin = options.crossOrigin;
+                }
                 
                 // Use web audio if possible to improve performance.
                 if (options.webAudioApi) {
