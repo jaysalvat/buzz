@@ -27,7 +27,7 @@
     var buzz = {
         defaults: {
             autoplay: false,
-            crossOrigin: false,
+            crossOrigin: null,
             duration: 5000,
             formats: [],
             loop: false,
