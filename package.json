@@ -18,12 +18,12 @@
     "buzz.js"
   ],
   "devDependencies": {
-    "grunt": "~0.4",
-    "grunt-contrib-clean": "~0.4.0",
+    "grunt": "^1.0.1",
+    "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-jasmine": "^0.8.2",
-    "grunt-contrib-jshint": "~0.1",
-    "grunt-contrib-uglify": "~0.1",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-uglify": "^1.0.1",
     "grunt-exec": "~0.4",
-    "semver": "3.x"
+    "semver": "^5.1.0"
   }
 }

@@ -1,10 +1,10 @@
  // ----------------------------------------------------------------------------
  // Buzz, a Javascript HTML5 Audio library
- // v1.1.10 - Built 2015-04-20 13:05
+ // v1.1.10 - Built 2016-05-22 15:14
  // Licensed under the MIT license.
  // http://buzz.jaysalvat.com/
  // ----------------------------------------------------------------------------
- // Copyright (C) 2010-2015 Jay Salvat
+ // Copyright (C) 2010-2016 Jay Salvat
  // http://jaysalvat.com/
  // ----------------------------------------------------------------------------
 
@@ -23,6 +23,7 @@
     var buzz = {
         defaults: {
             autoplay: false,
+            crossOrigin: null,
             duration: 5e3,
             formats: [],
             loop: false,
@@ -427,10 +428,11 @@
                 } else {
                     duration = duration || buzz.defaults.duration;
                 }
-                var from = this.volume, delay = duration / Math.abs(from - to), self = this;
+                var from = this.volume, delay = duration / Math.abs(from - to), self = this, fadeToTimeout;
                 this.play();
                 function doFade() {
-                    setTimeout(function() {
+                    clearTimeout(fadeToTimeout);
+                    fadeToTimeout = setTimeout(function() {
                         if (from < to && self.volume < to) {
                             self.setVolume(self.volume += 1);
                             doFade();
@@ -516,6 +518,9 @@
                     }
                 }
                 this.sound = doc.createElement("audio");
+                if (options.crossOrigin !== null) {
+                    this.sound.crossOrigin = options.crossOrigin;
+                }
                 if (options.webAudioApi) {
                     var audioCtx = buzz.getAudioContext();
                     if (audioCtx) {
