@@ -2,6 +2,11 @@
 
 ## CHANGE LOG
 
+### Buzz 1.2.0 2016-05-22
+
+- Add crossOrigin support to allow CORS
+- Fix a multiple FadeIn/FadeOut issue
+
 ### Buzz 1.1.10 2015-04-20
 
 * Fix #93 readOnly networkState error
@@ -42,13 +47,13 @@
 ### Buzz 1.1.0 2013-08-15
 
 * Fix setTime infinite loop on Firefox
-* Fix a couple of method chaining bugs 
+* Fix a couple of method chaining bugs
 * Add AMD and CommonJS support
 * Add iframe support
 * Fix getPlayed method not returning good values
 * Add new architecture src / dist
 * Add minified version
-* Add Gruntfile 
+* Add Gruntfile
 
 ### Buzz 1.0.6 2013-01-16
 

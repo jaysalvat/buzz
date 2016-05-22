@@ -46,7 +46,7 @@
         },
         sounds: [],
         el: document.createElement('audio'),
-        
+
         getAudioContext: function() {
             if (this.audioCtx === undefined) {
                 try {
@@ -56,7 +56,7 @@
                     this.audioCtx = null;
                 }
             }
-          
+
             return this.audioCtx;
         },
 
@@ -528,8 +528,7 @@
 
                 return this;
             };
-            
-            var currentFade;
+
             this.fadeTo = function (to, duration, callback) {
                 if (!supported) {
                     return this;
@@ -544,13 +543,15 @@
 
                 var from = this.volume,
                     delay = duration / Math.abs(from - to),
-                    self = this;
+                    self = this,
+                    fadeToTimeout;
 
                 this.play();
 
                 function doFade() {
-                    clearTimeout(currentFade);
-                    currentFade = setTimeout(function () {
+                    clearTimeout(fadeToTimeout);
+
+                    fadeToTimeout = setTimeout(function () {
                         if (from < to && self.volume < to) {
                             self.setVolume(self.volume += 1);
                             doFade();
@@ -666,12 +667,12 @@
                 }
 
                 this.sound = doc.createElement('audio');
-                
+
                 // Shoud we set crossOrigin?
                 if (options.crossOrigin !== null) {
                     this.sound.crossOrigin = options.crossOrigin;
                 }
-                
+
                 // Use web audio if possible to improve performance.
                 if (options.webAudioApi) {
                     var audioCtx = buzz.getAudioContext();
