@@ -128,8 +128,8 @@
                     return this;
                 }
 
-                this.setTime(0);
                 this.sound.pause();
+                this.setTime(0);
 
                 return this;
             };
