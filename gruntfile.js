@@ -90,6 +90,9 @@ module.exports = function(grunt) {
                     'git push origin master',
                     'git push origin master --tags'
                 ].join(' && ')
+            },
+            npmPublish: {
+                cmd: 'npm publish'
             }
         }
     });
@@ -128,7 +131,8 @@ module.exports = function(grunt) {
             'exec:gitCommit:' + version,
             'exec:gitTag:' + version,
             'exec:gitPush',
-            'exec:publish'
+            'exec:publish',
+            'exec:npmPublish'
         ]);
     });
 
