@@ -162,8 +162,9 @@ module.exports = function(grunt) {
         var metadata = {
             'date': grunt.template.today("yyyy-mm-dd HH:MM:ss"),
             'version': version
-        };
+        }, json = JSON.stringify(metadata, null, 4); 
 
-        grunt.file.write('dist/metadata.json', JSON.stringify(metadata, null, 2));
+        grunt.file.write('dist/metadata.json', json);
+        grunt.file.write('dist/metadata.js', '__metadata(' + json + ');');
     });
 };
