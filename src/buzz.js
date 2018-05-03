@@ -86,7 +86,7 @@
                     return this;
                 }
 
-                this.sound.play();
+                this.sound.play().catch(() => {});
 
                 return this;
             };
@@ -97,7 +97,7 @@
                 }
 
                 if (this.sound.paused) {
-                    this.sound.play();
+                    this.sound.play().catch(() => {});
                 } else {
                     this.sound.pause();
                 }
