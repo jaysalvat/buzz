@@ -8,6 +8,7 @@
   "license": "MIT",
   "main": "dist/buzz.js",
   "module": "dist/buzz.esm.js",
+  "types": "dist/buzz.d.ts",
   "repository": {
     "type": "git",
     "url": "git@github.com:jaysalvat/buzz.git"

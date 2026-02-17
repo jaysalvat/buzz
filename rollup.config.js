@@ -1,5 +1,5 @@
 import terser from '@rollup/plugin-terser';
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, copyFileSync } from 'fs';
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf8'));
 
@@ -25,6 +25,9 @@ const metadata = {
 
 writeFileSync('dist/metadata.json', JSON.stringify(metadata, null, 2));
 writeFileSync('dist/metadata.js', `__metadata(${JSON.stringify(metadata, null, 2)});`);
+
+// Copy TypeScript definitions
+copyFileSync('src/buzz.d.ts', 'dist/buzz.d.ts');
 
 export default [
   // UMD build (unminified)
