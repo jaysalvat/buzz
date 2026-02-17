@@ -6,24 +6,10 @@
 // Copyright (C) Jay Salvat
 // http://jaysalvat.com/
 // ----------------------------------------------------------------------------
-/* global define */
 
-(function (context, factory) {
-    "use strict";
+var AudioContext = window.AudioContext || window.webkitAudioContext;
 
-    if (typeof module !== 'undefined' && module.exports) {
-        module.exports = factory();
-    } else if (typeof define === 'function' && define.amd) {
-        define([], factory);
-    } else {
-        context.buzz = factory();
-    }
-})(this, function () {
-    "use strict";
-
-    var AudioContext = window.AudioContext || window.webkitAudioContext;
-
-    var buzz = {
+var buzz = {
         defaults: {
             autoplay: false,
             crossOrigin: null,
@@ -533,6 +519,7 @@
                     return this;
                 }
 
+                // Handle optional duration parameter
                 if (duration instanceof Function) {
                     callback = duration;
                     duration = buzz.defaults.duration;
@@ -544,6 +531,17 @@
                     delay = duration / Math.abs(from - to),
                     self = this,
                     fadeToTimeout;
+
+                // Determine if we should return a promise
+                var hasCallback = callback instanceof Function;
+                var promiseResolve = null;
+
+                if (!hasCallback) {
+                    // No callback provided, prepare for promise mode
+                    var promise = new Promise(function(resolve) {
+                        promiseResolve = resolve;
+                    });
+                }
 
                 this.play();
 
@@ -557,8 +555,13 @@
                         } else if (from > to && self.volume > to) {
                             self.setVolume(self.volume -= 1);
                             doFade();
-                        } else if (callback instanceof Function) {
-                            callback.apply(self);
+                        } else {
+                            // Fade complete
+                            if (hasCallback) {
+                                callback.apply(self);
+                            } else if (promiseResolve) {
+                                promiseResolve(self);
+                            }
                         }
                     }, delay);
                 }
@@ -567,7 +570,8 @@
                     doFade();
                 });
 
-                return this;
+                // Return promise if no callback, otherwise return this for chaining
+                return hasCallback ? this : promise;
             };
 
             this.fadeIn = function (duration, callback) {
@@ -575,7 +579,11 @@
                     return this;
                 }
 
-                return this.setVolume(0).fadeTo(100, duration, callback);
+                // fadeIn inherits promise/callback behavior from fadeTo
+                var result = this.setVolume(0).fadeTo(100, duration, callback);
+
+                // If fadeTo returned a promise, return it; otherwise return this
+                return (result && typeof result.then === 'function') ? result : this;
             };
 
             this.fadeOut = function (duration, callback) {
@@ -583,6 +591,7 @@
                     return this;
                 }
 
+                // fadeOut inherits promise/callback behavior from fadeTo
                 return this.fadeTo(0, duration, callback);
             };
 
@@ -606,13 +615,28 @@
                 }
 
                 var self = this;
+                var hasCallback = func instanceof Function;
 
-                if (this.sound.readyState === 0) {
-                    this.bind('canplay.buzzwhenready', function () {
-                        func.call(self);
+                if (!hasCallback) {
+                    // Promise mode
+                    return new Promise(function(resolve) {
+                        if (self.sound.readyState === 0) {
+                            self.bind('canplay.buzzwhenready', function () {
+                                resolve(self);
+                            });
+                        } else {
+                            resolve(self);
+                        }
                     });
                 } else {
-                    func.call(self);
+                    // Callback mode (legacy behavior)
+                    if (this.sound.readyState === 0) {
+                        this.bind('canplay.buzzwhenready', function () {
+                            func.call(self);
+                        });
+                    } else {
+                        func.call(self);
+                    }
                 }
             };
 
@@ -965,5 +989,4 @@
         }
     };
 
-    return buzz;
-});
+export default buzz;

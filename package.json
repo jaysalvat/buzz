@@ -23,11 +23,12 @@
     "build": "rollup -c",
     "watch": "rollup -c -w",
     "lint": "eslint src/**/*.js",
-    "test": "npm run lint"
+    "test": "npm run lint && node tests/test-all.js"
   },
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
     "eslint": "^8.57.0",
+    "puppeteer": "^24.37.3",
     "rollup": "^4.9.6"
   }
 }

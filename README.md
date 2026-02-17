@@ -25,6 +25,74 @@ http://buzz.jaysalvat.com/demo/
 ### Documentation
 http://buzz.jaysalvat.com/documentation/
 
+Promise Support
+---------------
+
+Buzz now supports both **callback** and **Promise** patterns, maintaining full backward compatibility.
+
+### Methods with Promise support
+
+The following methods now return a Promise when no callback is provided:
+
+- `fadeTo(to, [duration], [callback])`
+- `fadeIn([duration], [callback])`
+- `fadeOut([duration], [callback])`
+- `whenReady([callback])`
+
+### Usage Examples
+
+#### With callbacks (backward compatible)
+```javascript
+var mySound = new buzz.sound("/sounds/myfile.mp3");
+
+mySound.fadeIn(1000, function() {
+    console.log('Fade in complete!');
+    this.fadeOut(1000, function() {
+        console.log('Fade out complete!');
+    });
+});
+```
+
+#### With Promises
+```javascript
+var mySound = new buzz.sound("/sounds/myfile.mp3");
+
+mySound.fadeIn(1000)
+    .then(() => {
+        console.log('Fade in complete!');
+        return mySound.fadeOut(1000);
+    })
+    .then(() => {
+        console.log('Fade out complete!');
+    });
+```
+
+#### With async/await
+```javascript
+var mySound = new buzz.sound("/sounds/myfile.mp3");
+
+async function playSequence() {
+    await mySound.fadeIn(1000);
+    console.log('Fade in complete!');
+
+    await mySound.fadeOut(1000);
+    console.log('Fade out complete!');
+}
+
+playSequence();
+```
+
+#### whenReady with Promise
+```javascript
+var mySound = new buzz.sound("/sounds/myfile.mp3");
+
+// Wait for the sound to be ready before playing
+await mySound.whenReady();
+mySound.play();
+```
+
+See [PROMISE_MIGRATION.md](PROMISE_MIGRATION.md) for a complete migration guide.
+
 Contributing
 ------------
 
