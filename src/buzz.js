@@ -6,7 +6,6 @@
 // Copyright (C) Jay Salvat
 // http://jaysalvat.com/
 // ----------------------------------------------------------------------------
-/* jshint browser: true, node: true */
 /* global define */
 
 (function (context, factory) {

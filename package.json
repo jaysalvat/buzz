@@ -1,11 +1,13 @@
 {
   "name": "buzz",
   "version": "1.2.1",
+  "type": "module",
   "description": "Buzz, a Javascript HTML5 Audio library",
   "homepage": "http://buzz.jaysalvat.com",
   "author": "Jay Salvat",
   "license": "MIT",
   "main": "dist/buzz.js",
+  "module": "dist/buzz.esm.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:jaysalvat/buzz.git"
@@ -17,13 +19,15 @@
     "buzz",
     "buzz.js"
   ],
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "lint": "eslint src/**/*.js",
+    "test": "npm run lint"
+  },
   "devDependencies": {
-    "grunt": "^1.0.1",
-    "grunt-contrib-clean": "^1.0.0",
-    "grunt-contrib-jasmine": "^0.8.2",
-    "grunt-contrib-jshint": "^1.0.0",
-    "grunt-contrib-uglify": "^1.0.1",
-    "grunt-exec": "~0.4",
-    "semver": "^5.1.0"
+    "@rollup/plugin-terser": "^0.4.4",
+    "eslint": "^8.57.0",
+    "rollup": "^4.9.6"
   }
 }
