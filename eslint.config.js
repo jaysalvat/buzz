@@ -12,6 +12,7 @@ export default [
         console: 'readonly',
         define: 'readonly',
         module: 'readonly',
+        process: 'readonly',
         setTimeout: 'readonly',
         clearTimeout: 'readonly'
       }
@@ -19,7 +20,11 @@ export default [
     rules: {
       'no-unused-vars': 'warn',
       'no-undef': 'error',
-      'no-console': 'off'
+      'no-console': 'off',
+      semi: ['error', 'never'],
+      'no-multi-spaces': 'error',
+      'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0, maxBOF: 0 }],
+      'space-before-function-paren': ['error', { named: 'never', anonymous: 'never', asyncArrow: 'always' }]
     }
   }
-];
+]

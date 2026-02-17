@@ -23,7 +23,7 @@
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -c -w",
-    "lint": "eslint src/**/*.js",
+    "lint": "eslint src/**/*.js tests/**/*.js eslint.config.js",
     "test": "npm run lint && node tests/test-all.js"
   },
   "devDependencies": {
