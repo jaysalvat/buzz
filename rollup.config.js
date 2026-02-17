@@ -30,17 +30,16 @@ writeFileSync('dist/metadata.js', `__metadata(${JSON.stringify(metadata, null, 2
 copyFileSync('src/buzz.d.ts', 'dist/buzz.d.ts')
 
 export default [
-  // UMD build (unminified)
+  // ES Module build (for modern imports)
   {
     input: 'src/buzz.js',
     output: {
       file: 'dist/buzz.js',
-      format: 'umd',
-      name: 'buzz',
+      format: 'es',
       banner: banner
     }
   },
-  // UMD build (minified)
+  // UMD build (for CDN/legacy usage, minified)
   {
     input: 'src/buzz.js',
     output: {
@@ -57,14 +56,5 @@ export default [
         }
       })
     ]
-  },
-  // ES Module build
-  {
-    input: 'src/buzz.js',
-    output: {
-      file: 'dist/buzz.esm.js',
-      format: 'es',
-      banner: banner
-    }
   }
 ]

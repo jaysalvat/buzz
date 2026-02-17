@@ -65,7 +65,7 @@ async function runTests() {
         console.log('\nBuzz.js - Complete Test Suite\n')
         console.log('═══════════════════════════════════════════════════════════\n')
 
-        await page.addScriptTag({ path: resolve(projectRoot, 'dist/buzz.js') })
+        await page.addScriptTag({ path: resolve(projectRoot, 'dist/buzz.min.js') })
 
         const testResults = await page.evaluate(() => {
             const results = []
