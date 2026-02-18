@@ -16,6 +16,31 @@ mySound.play()
     });
 ```
 
+## Installation
+
+### npm
+```bash
+npm install buzz
+```
+
+### CDN (UMD)
+```html
+<script src="https://cdn.jsdelivr.net/npm/buzz@2.0.0/dist/buzz.min.js"></script>
+```
+
+### ES Module
+```javascript
+import buzz from 'buzz'
+```
+
+## What's New in 2.0
+
+🎁 **Promise Support** - All async methods now support both callbacks and Promises
+🚀 **Modern JavaScript** - ES2015+ syntax (const/let, arrows, templates)
+📦 **Simplified Build** - 2 files: `buzz.js` (ESM) + `buzz.min.js` (UMD)
+🔷 **TypeScript** - Full type definitions included
+🧪 **Better Testing** - 42 comprehensive headless tests
+
 ### Official website
 http://buzz.jaysalvat.com/
 
@@ -91,7 +116,48 @@ await mySound.whenReady();
 mySound.play();
 ```
 
-See [PROMISE_MIGRATION.md](PROMISE_MIGRATION.md) for a complete migration guide.
+## Module Formats
+
+Buzz 2.0 provides two build formats to support both modern and legacy usage:
+
+### ES Module (`buzz.js`)
+For modern development with npm and bundlers:
+```javascript
+// Import as ES Module
+import buzz from 'buzz'
+
+const mySound = new buzz.sound('/sounds/myfile.mp3')
+await mySound.fadeIn(1000)
+```
+
+### UMD (`buzz.min.js`)
+For CDN usage and legacy browsers:
+```html
+<!-- Load from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/buzz@2.0.0/dist/buzz.min.js"></script>
+
+<script>
+  // Global buzz object
+  var mySound = new buzz.sound('/sounds/myfile.mp3')
+  mySound.fadeIn(1000, function() {
+    console.log('Done!')
+  })
+</script>
+```
+
+## TypeScript Support
+
+Buzz 2.0 includes full TypeScript definitions:
+
+```typescript
+import buzz from 'buzz'
+
+const sound: buzz.BuzzSound = new buzz.sound('/audio.mp3')
+
+// Full autocomplete and type checking
+await sound.fadeIn(1000)
+sound.setVolume(80)
+```
 
 Contributing
 ------------

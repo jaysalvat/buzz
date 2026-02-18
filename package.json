@@ -1,6 +1,6 @@
 {
   "name": "buzz",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "type": "module",
   "description": "Buzz, a Javascript HTML5 Audio library",
   "homepage": "http://buzz.jaysalvat.com",
@@ -9,6 +9,13 @@
   "main": "dist/buzz.js",
   "module": "dist/buzz.js",
   "types": "dist/buzz.d.ts",
+  "files": [
+    "dist/",
+    "src/",
+    "README.md",
+    "CHANGELOG.md",
+    "MIT-LICENSE"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:jaysalvat/buzz.git"
@@ -24,7 +31,13 @@
     "build": "rollup -c",
     "watch": "rollup -c -w",
     "lint": "eslint src/**/*.js tests/**/*.js eslint.config.js",
-    "test": "npm run lint && node tests/test-all.js"
+    "test": "npm run lint && node tests/test-all.js",
+    "preversion": "npm test",
+    "version": "npm run build && git add -A dist",
+    "postversion": "git push && git push --tags",
+    "release:patch": "npm version patch -m 'Release v%s'",
+    "release:minor": "npm version minor -m 'Release v%s'",
+    "release:major": "npm version major -m 'Release v%s'"
   },
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",

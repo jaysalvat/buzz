@@ -2,6 +2,61 @@
 
 ## CHANGE LOG
 
+### Buzz 2.0.0 2026-02-17
+
+**Major Release - Breaking Changes**
+
+#### Promise Support
+- Add Promise support to `fadeTo()`, `fadeIn()`, `fadeOut()`, and `whenReady()`
+- Maintain 100% backward compatibility with callback pattern
+- Return Promise when no callback provided, otherwise return `this` for chaining
+- Support async/await syntax
+
+#### Modern JavaScript
+- Modernize codebase with ES2015+ syntax
+- Add TypeScript definitions (`buzz.d.ts`)
+
+#### Build & Distribution
+- Simplify build to 2 files: `buzz.js` (ES Module) + `buzz.min.js` (UMD minified)
+- Remove `buzz.esm.js` (replaced by `buzz.js`)
+- Modern import support: `import buzz from 'buzz'`
+- Legacy CDN support: `<script src="buzz.min.js"></script>`
+- Source maps included for minified version
+
+#### Testing
+- Replace Jasmine with lightweight Puppeteer-based tests
+- Comprehensive tests
+- Headless browser testing
+
+#### Breaking Changes
+- Remove Jasmine test framework
+- Change build output: no more `buzz.esm.js`, use `buzz.js` instead
+- `buzz.js` is now ES Module format (use `buzz.min.js` for UMD/CDN)
+- Require ES2015+ browser support
+
+#### Migration Guide
+```javascript
+// Before (callbacks only)
+mySound.fadeIn(1000, function() {
+    console.log('Done!');
+});
+
+// After (still works + Promise support)
+// Option 1: Callbacks (backward compatible)
+mySound.fadeIn(1000, function() {
+    console.log('Done!');
+});
+
+// Option 2: Promises
+mySound.fadeIn(1000).then(() => {
+    console.log('Done!');
+});
+
+// Option 3: async/await
+await mySound.fadeIn(1000);
+console.log('Done!');
+```
+
 ### Buzz 1.2.0 2016-05-22
 
 - Add crossOrigin support to allow CORS
